@@ -12,6 +12,8 @@ knitr::opts_chunk$set(echo = TRUE)
 # Load Library
 ```{r}
 library("tidyverse")
+library("patchwork")
+library("ggridges")
 ```
 
 # Loading of data 
@@ -113,8 +115,112 @@ clean_data %>%
 ```
 
 
+#  Levels of the 3 biomarkers in control, benign, and  (PDAC) samples
+```{r}
+LYVEvscreatinine <- select(clean_data, diagnosis , stage , LYVE1, creatinine) %>%
+      mutate(diagnosis = case_when(
+      diagnosis == "control" ~ "control",
+      diagnosis == "benign" ~ "benign",
+      stage  == "IA" ~ "PDAC I-II",
+      stage  == "IB" ~ "PDAC I-II",
+      stage  == "IIA" ~ "PDAC I-II",
+      stage  == "IIB" ~ "PDAC I-II",
+      stage  == "III" ~ "PDAC III-IV",
+      stage  == "IV" ~ "PDAC III-IV") , 
+      LYVE1 = LYVE1 / creatinine  )
+
+```
 
 
+```{r}
+LYVEvscreatinine_plot <-ggplot(data = LYVEvscreatinine, 
+       mapping = aes(x = diagnosis, 
+                     y = LYVE1, 
+                     color = diagnosis)) + 
+  geom_violin(trim=FALSE)+ 
+  geom_boxplot(width=0.2)+
+  labs(y = "LYVE1 ng/mg creatinine" , 
+       title = "LYVE1") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none")
+
+```
+
+
+
+```{r}
+REG1Bvscreatinine <- select(clean_data, diagnosis , stage , REG1B, creatinine) %>%
+      mutate(diagnosis = case_when(
+      diagnosis == "control" ~ "control",
+      diagnosis == "benign" ~ "benign",
+      stage  == "IA" ~ "PDAC I-II",
+      stage  == "IB" ~ "PDAC I-II",
+      stage  == "IIA" ~ "PDAC I-II",
+      stage  == "IIB" ~ "PDAC I-II",
+      stage  == "III" ~ "PDAC III-IV",
+      stage  == "IV" ~ "PDAC III-IV"), 
+      REG1B = REG1B/ creatinine)
+
+```
+
+```{r}
+REG1Bvscreatinine_plot <- ggplot(data = REG1Bvscreatinine, 
+       mapping = aes(x = diagnosis, 
+                     y = REG1B, 
+                     color = diagnosis)) + 
+  geom_violin(trim=FALSE)+ 
+  geom_boxplot(width=0.2)+
+  labs(y = "REG1B ng/mg creatinine" , 
+       title = "REG1B") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none")
+
+
+
+```
+
+```{r}
+TFF1vscreatinine <- select(clean_data, diagnosis , stage , TFF1, creatinine) %>%
+      mutate(diagnosis = case_when(
+      diagnosis == "control" ~ "control",
+      diagnosis == "benign" ~ "benign",
+      stage  == "IA" ~ "PDAC I-II",
+      stage  == "IB" ~ "PDAC I-II",
+      stage  == "IIA" ~ "PDAC I-II",
+      stage  == "IIB" ~ "PDAC I-II",
+      stage  == "III" ~ "PDAC III-IV",
+      stage  == "IV" ~ "PDAC III-IV"),
+      TFF1 = TFF1/ creatinine)
+    
+```
+
+
+```{r}
+TFF1vscreatinine_plot <-ggplot(data = TFF1vscreatinine, 
+       mapping = aes(x = diagnosis, 
+                     y = TFF1, 
+                     color = diagnosis)) + 
+  geom_violin(trim=FALSE)+ 
+  geom_boxplot(width=0.2)+
+  labs(y = "TFF1 ng/mg creatinine" , 
+       title = "TFF1") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none")
+
+```
+
+
+```{r}
+patchwork <- (LYVEvscreatinine_plot |REG1Bvscreatinine_plot |TFF1vscreatinine_plot )
+patchwork + plot_annotation(
+              title = "The levels of the 3 biomarkers in control, benign, and pancreatic ductal adenocarcinoma (PDAC) samples. " ,
+              subtitle = "Violin plots are shown for each protein. All data were creatinine normalised ",
+              caption= "Data from Silvana Debernardi et al" )& 
+  theme(legend.position = 'none')
+```
 
 
 

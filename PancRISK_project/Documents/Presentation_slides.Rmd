@@ -1,8 +1,8 @@
+
 ---
 title: "22100 R for Bio Data Science Spring 22"
 subtitle : "GROUP 18  FINAL PROJECT "
 author: Yassine Damergi Alem Gusinac Chau Zhong Belkis Maurice Kappelmeyer Karolina Zofia Tudelska
-
 date: May 10, 2022
 output:
   ioslides_presentation:
