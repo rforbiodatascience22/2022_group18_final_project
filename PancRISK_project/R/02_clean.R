@@ -16,6 +16,8 @@ my_data_clean <- my_data %>%
                                diagnosis == 3 ~ "malignant"),
          sex = case_when(sex == "F" ~ "Female",
                          sex == "M" ~ "Male"),
+         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
+                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
          sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
                                       sample_origin == "UCL" ~ "United Kingdom",
                                       sample_origin == "LIV" ~ "United Kingdom",
