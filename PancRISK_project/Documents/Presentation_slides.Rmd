@@ -1,0 +1,22 @@
+---
+title: "22100 R for Bio Data Science Spring 22"
+subtitle : "GROUP 18  FINAL PROJECT "
+author: Yassine Damergi Alem Gusinac Chau Zhong Belkis Maurice Kappelmeyer Karolina Zofia Tudelska
+
+date: May 10, 2022
+output:
+  ioslides_presentation:
+    template: quarterly-report.html
+---
+
+# Data loading and cleaning | Subtitle
+
+## Alem will write his comments here
+
+# Data wrangling and visualisation | Subtitle
+
+## Balkis will write her comments here
+
+# Data modelling | Subtitle
+
+## Maurice will write his comments here

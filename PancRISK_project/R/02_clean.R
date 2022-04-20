@@ -23,8 +23,7 @@ my_data_clean <- my_data %>%
          sample_id = gsub('^.', '', sample_id)) %>% 
   select(.,
          -sample_origin,
-         -benign_sample_diagnosis) %>% 
-  drop_na(plasma_CA19_9)
+         -benign_sample_diagnosis)
 
 # Write data --------------------------------------------------------------
 write_tsv(x = my_data_clean,
