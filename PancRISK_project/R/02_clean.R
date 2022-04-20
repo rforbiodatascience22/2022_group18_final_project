@@ -16,6 +16,8 @@ my_data_clean <- my_data %>%
                                diagnosis == 3 ~ "malignant"),
          sex = case_when(sex == "F" ~ "Female",
                          sex == "M" ~ "Male"),
+         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
+                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
          sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
                                       sample_origin == "UCL" ~ "United Kingdom",
                                       sample_origin == "LIV" ~ "United Kingdom",
@@ -23,8 +25,7 @@ my_data_clean <- my_data %>%
          sample_id = gsub('^.', '', sample_id)) %>% 
   select(.,
          -sample_origin,
-         -benign_sample_diagnosis) %>% 
-  drop_na(plasma_CA19_9)
+         -benign_sample_diagnosis)
 
 # Write data --------------------------------------------------------------
 write_tsv(x = my_data_clean,

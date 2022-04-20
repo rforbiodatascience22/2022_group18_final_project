@@ -1,4 +1,5 @@
 sample_id	patient_cohort	age	sex	diagnosis	stage	plasma_CA19_9	creatinine	LYVE1	REG1B	TFF1	REG1A	sampling_country
+<<<<<<< HEAD
 1	Cohort1	33	Female	control	NA	11.7	1.83222	0.8932192	52.94884	654.282174	1262	United Kingdom
 100	Cohort2	51	Male	control	NA	7	0.78039	0.1455889	102.366	461.141	NA	United Kingdom
 101	Cohort2	61	Male	control	NA	8	0.70122	0.00280488	60.579	142.95	NA	United Kingdom
