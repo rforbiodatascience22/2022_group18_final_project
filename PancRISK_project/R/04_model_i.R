@@ -10,18 +10,10 @@ my_data_clean <-
   mutate(diagnosis = factor(diagnosis)) %>%
   mutate(sex = factor(sex)) %>%
   mutate(diagnosis = relevel(diagnosis, ref = "control"))
-  
-my_data_plasma_CA19_9_NA <-
-  my_data_clean %>% 
-  filter(is.na(plasma_CA19_9))
 
 my_data_REG1A_NA <-
   my_data_clean %>% 
   filter(is.na(REG1A))
-
-my_data_plasma_zero <-
-  my_data_clean %>% 
-  filter(plasma_CA19_9 == 0 & !is.na(plasma_CA19_9))
 
 my_data_REG1A_zero <-
   my_data_clean %>% 
@@ -31,10 +23,8 @@ my_data_clean <-
   my_data_clean %>% 
   filter(!is.na(plasma_CA19_9) & !is.na(REG1A) & REG1A != 0 & plasma_CA19_9 != 0) %>%
   mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), log) %>%
-  full_join(my_data_plasma_zero) %>%
   full_join(my_data_REG1A_zero) %>%
   mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), scale, scale = FALSE) %>% 
-  full_join(my_data_plasma_CA19_9_NA) %>%
   full_join(my_data_REG1A_NA) %>%
   mutate(REG1A = REG1A[,1],
          REG1B = REG1B[,1],
@@ -44,8 +34,8 @@ my_data_clean <-
   group_by(diagnosis)
 
 sampleGuide <- data_frame(
-  diagnosis = c("control","benign","malignant"),
-  amount = c(92,104,100)
+  diagnosis = c("control", "benign", "malignant"),
+  amount = c(92, 104, 100) #Half of each group
 )
 
 my_data_train <-
@@ -160,3 +150,14 @@ confusionMatrix(conf_matrix)# %>%
 
 conf_matrix_simple <- table(my_data_val_simple$pred, my_data_val_simple$diagnosis)
 confusionMatrix(conf_matrix_simple)
+
+plotx <- rev(roc_test$specificities)
+ploty <- rev(roc_test$sensitivities)
+ggplot(NULL, aes(x = plotx, y = ploty)) +
+  geom_segment(aes(x = 0, y = 1, xend = 1, yend = 0), alpha = 0.5) + 
+  geom_step() +
+  scale_x_reverse(name = "Specificity",limits = c(1,0), breaks = seq(0, 1, 0.2), expand = c(0.001,0.001)) + 
+  scale_y_continuous(name = "Sensitivity", limits = c(0,1), breaks = seq(0, 1, 0.2), expand = c(0.001, 0.001)) +
+  theme_minimal() + 
+  coord_equal() + 
+  ggtitle("text", x = 0.2/2, y = 0.2/2, vjust = 0, label = paste("AUC =",sprintf("%.3f",roc_test$auc)))
