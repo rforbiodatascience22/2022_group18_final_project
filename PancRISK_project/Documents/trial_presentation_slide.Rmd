@@ -1,0 +1,92 @@
+---
+title: "22100 - R for Bio Data Science"
+subtitle : "GROUP 18  FINAL PROJECT "
+author: "Group 18"
+date: '2022-05-10'
+output: 
+  ioslides_presentation:
+    widescreen: true
+    incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+
+
+## Introduction {.build}
+
+- background of the dataset 
+  - where does the dataset come from 
+  - aim of the investigation
+
+## Materials and Methods | Data cleansing
+
+Alem will write his comments here
+
+- raw data 
+  - how to handle "NA"
+  - missing values
+- code
+- clean data
+
+## Materials and Methods | Data wrangling and visualisation 
+
+Balkis will write her comments here 
+
+- beautiful and meaningful plots
+- explanantion of the plots
+
+## Materials and Methods | Data modelling
+
+Maurice will write his comments here
+
+## Results {.build}
+
+Results from modelling
+
+## Discussion {.build}
+
+- What we see from the model Is there any difference between our model and the model from the paper? 
+- Limitation of our model 
+- Any further improvements?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
