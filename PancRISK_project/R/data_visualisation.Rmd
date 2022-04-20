@@ -1,0 +1,122 @@
+---
+title: "Data Visualisation"
+author: "Group 18"
+date: '2022-04-20'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Load Library
+```{r}
+library("tidyverse")
+```
+
+# Loading of data 
+```{r}
+clean_data <- read.csv("../data/02_my_data_clean.tsv", sep = "\t")
+```
+
+# Cohort
+```{r}
+ggplot(data = clean_data, 
+       mapping = aes(y = age, 
+                     x = patient_cohort, 
+                     color= diagnosis)) + 
+  geom_boxplot()
+```
+
+
+```{r}
+ggplot(data = clean_data, 
+       mapping = aes(x = patient_cohort, 
+                     y = creatinine, 
+                     color = diagnosis)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(data = clean_data, 
+       mapping = aes(x = patient_cohort, 
+                     y = LYVE1, 
+                     color = diagnosis)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(data = clean_data, 
+       mapping = aes(x = patient_cohort, 
+                     y = REG1B, 
+                     color = diagnosis)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(data = clean_data, 
+       mapping = aes(x = patient_cohort, 
+                     y = TFF1, 
+                     color = diagnosis)) + 
+  geom_boxplot()
+```
+
+```{r}
+ggplot(data = clean_data, 
+       mapping = aes(x = patient_cohort, 
+                     y = plasma_CA19_9, 
+                     color = diagnosis)) + 
+  geom_boxplot()
+```
+
+# Age Distribution 
+```{r}
+#clean_data %>%
+#  count(age) %>%
+#  ggplot(aes(x = age, y = n)) +
+#  geom_col()
+
+
+clean_data %>%
+  ggplot(aes(x = age)) +
+  geom_bar()
+```
+
+# Sex Distribution 
+```{r}
+clean_data %>% 
+  count(sex) %>% 
+  ggplot(aes(x = "", 
+             y = n, 
+             fill = sex)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  geom_text(aes(label = n),
+            position = position_stack(vjust = 0.5)) + 
+  
+  theme_void() # remove background, grid, numeric labels
+```
+
+# Diagnosis
+```{r}
+clean_data %>% 
+  count(diagnosis) %>% 
+  ggplot(aes(x = "", 
+             y = n, 
+             fill = diagnosis)) +
+  geom_bar(stat="identity", width=1, color="white") +
+  coord_polar("y", start=0) +
+  geom_text(aes(label = n),
+            position = position_stack(vjust = 0.5)) + 
+  
+  theme_void() # remove background, grid, numeric labels
+```
+
+
+
+
+
+
+
+
+
