@@ -79,5 +79,15 @@ my_data_test <-
   mutate(diagnosis = as.numeric(diagnosis)) %>%
   select(diagnosis, pred) %>%
   drop_na()
-multiclass.roc(my_data_test$diagnosis, my_data_test$pred,
-               plot = TRUE)
+
+response <- my_data_test %>% 
+  select(diagnosis) %>% 
+  subset() %>% 
+  tidy()
+
+predictor <- my_data_test %>% 
+  select(pred) %>% 
+  subset() %>% 
+  array()
+  
+multiclass.roc(response, predictor, plot = TRUE)
