@@ -30,17 +30,17 @@ my_data_REG1A_zero <-
 my_data_clean <-
   my_data_clean %>% 
   filter(!is.na(plasma_CA19_9) & !is.na(REG1A) & REG1A != 0 & plasma_CA19_9 != 0) %>%
-  mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1", "plasma_CA19_9"), log) %>%
+  mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), log) %>%
   full_join(my_data_plasma_zero) %>%
   full_join(my_data_REG1A_zero) %>%
-  mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1", "plasma_CA19_9"), scale, scale = FALSE) %>% 
+  mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), scale, scale = FALSE) %>% 
   full_join(my_data_plasma_CA19_9_NA) %>%
   full_join(my_data_REG1A_NA) %>%
   mutate(REG1A = REG1A[,1],
          REG1B = REG1B[,1],
          LYVE1 = LYVE1[,1],
-         TFF1 = TFF1[,1],
-         plasma_CA19_9 = plasma_CA19_9[,1]) %>%
+         TFF1 = TFF1[,1]) %>%
+  mutate(cutoff_plasma = ifelse(plasma_CA19_9 > 37, 1, 0)) %>% 
   group_by(diagnosis)
 
 sampleGuide <- data_frame(
@@ -62,13 +62,24 @@ my_data_test <-
   my_data_clean %>% 
   setdiff(my_data_train)
 
+## Plasma
+
+
 ## PancRISK
-form_risk = formula(diagnosis ~ REG1A + REG1B + LYVE1 + TFF1 + plasma_CA19_9 + age + creatinine)
+form_risk = formula(diagnosis ~  REG1B + LYVE1 + TFF1 + cutoff_plasma + age + creatinine)
+pancrisk_model_plasma <- 
+  my_data_train %>%
+  multinom(formula = diagnosis ~ REG1B + LYVE1 + TFF1 + cutoff_plasma + age + creatinine,
+           data = .,
+           model = TRUE,
+           na.action = na.omit)
+
 pancrisk_model <- 
   my_data_train %>%
-  multinom(formula = diagnosis ~ REG1A + REG1B + LYVE1 + TFF1 + plasma_CA19_9 + age + creatinine,
+  multinom(formula = diagnosis ~ REG1B + LYVE1 + TFF1 + age + creatinine,
            data = .,
-           model = TRUE)
+           model = TRUE,
+           na.action = na.omit)
 
 pancrisk_simple_model <- 
   my_data_train %>%
@@ -83,16 +94,9 @@ pancrisk_model %>%
   mutate(significant = case_when(p.value < 0.05 ~ TRUE,
                                  p.value >= 0.05 ~ FALSE))
 
-my_data_test %>%
-  ungroup() %>%
-  select(diagnosis, REG1A, REG1B, LYVE1, TFF1, plasma_CA19_9, age, creatinine) %>%
-  mutate(prediction = as.numeric(predict(pancrisk_model, my_data_test))) %>%
-  mutate(diagnosis = as.numeric(diagnosis)) %>%
-  select(diagnosis, prediction) %>%
-  cor()
-
+## Only plasma
 my_data_train %>%
-  multinom(formula = diagnosis ~ plasma_CA19_9,
+  multinom(formula = diagnosis ~ cutoff_plasma,
            data = .) %>%
   tidy() %>%
   select(y.level, term, p.value) %>%
@@ -109,21 +113,11 @@ my_data_train %>%
   mutate(significant = case_when(p.value < 0.05 ~ TRUE,
                                  p.value >= 0.05 ~ FALSE))
 
-my_data_train %>%
-  mutate(stage = factor(stage)) %>%
-  multinom(formula = stage ~ REG1A + REG1B + LYVE1 + TFF1 + plasma_CA19_9 + age + creatinine,
-           data = .) %>%
-  tidy() %>%
-  select(y.level, term, p.value) %>%
-  group_by(y.level) %>%
-  mutate(significant = case_when(p.value < 0.05 ~ TRUE,
-                                 p.value >= 0.05 ~ FALSE))
-
 my_data_val <-
   my_data_test %>%
   ungroup() %>%
-  select(diagnosis, REG1A, REG1B, LYVE1, TFF1, plasma_CA19_9, age, creatinine) %>%
-  mutate(pred = as.numeric(predict(pancrisk_model, my_data_test))) %>%
+  select(diagnosis, REG1A, REG1B, LYVE1, TFF1, cutoff_plasma, age, creatinine) %>%
+  mutate(pred = as.numeric(predict(pancrisk_model_plasma, my_data_test))) %>%
   mutate(diagnosis = as.numeric(diagnosis)) %>%
   select(diagnosis, pred)
 
@@ -140,6 +134,14 @@ my_data_val_simple <-
   ungroup() %>%
   select(diagnosis, REG1A, LYVE1, TFF1) %>%
   mutate(pred = as.numeric(predict(pancrisk_simple_model, my_data_test))) %>%
+  mutate(diagnosis = as.numeric(diagnosis)) %>%
+  select(diagnosis, pred)
+
+my_data_val_train <-
+  my_data_train %>%
+  ungroup() %>%
+  select(diagnosis, REG1A, REG1B, LYVE1, TFF1, cutoff_plasma, age, creatinine) %>%
+  mutate(pred = as.numeric(predict(pancrisk_model, my_data_train))) %>%
   mutate(diagnosis = as.numeric(diagnosis)) %>%
   select(diagnosis, pred)
 
