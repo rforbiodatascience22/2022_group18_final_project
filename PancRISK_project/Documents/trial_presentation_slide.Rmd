@@ -12,6 +12,9 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
+<style>
+  background: white;
+</style>
 
 
 
@@ -38,9 +41,20 @@ Balkis will write her comments here
 - beautiful and meaningful plots
 - explanantion of the plots
 
+## Materials and Methods | Data modelling {.columns-2}
+```{r}
+acc_2
+
+acc_3
+
+acc_4
+```
 ## Materials and Methods | Data modelling
 
-Maurice will write his comments here
+```{r, fig.width = 10}
+(plot_roc(roc1, roc2, title = "Just Plasma") + plot_roc(roc3, roc4, title = "Simple")) / 
+  (plot_roc(roc5, roc6, title = "PancRISK without Plasma") + plot_roc(roc7, roc8, title = "PancRISK complete"))
+```
 
 ## Results {.build}
 

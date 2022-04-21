@@ -26,7 +26,7 @@ print_acc <- function(data, title = "Group") {
     mutate(term = c("Sensitivity", "Specificity")) %>%
     rename_at(c("term", "1", "2", "3"), ~ (c(" ", "Control", "Benign", "Malignant"))) %>% 
     knitr::kable() %>%
-    pack_rows(index = c(setNames(2, paste("Accurancy", accurancy, sep = "\t")))) %>%
+    add_header_above(c("Accurancy" = 1, setNames(3, accurancy)), line = FALSE, bold = FALSE) %>%
     add_header_above(c(setNames(4, paste("Performance - ", title)))) %>% 
     kable_styling()
 }
@@ -85,7 +85,7 @@ plot_roc <- function(roc_render_1, roc_render_2, title = "ROC") {
                        breaks = seq(0, 1, 0.2), 
                        expand = c(0.001, 0.001)) +
     theme_minimal() + 
-    coord_equal() + 
+    coord_equal() +
     ggtitle(str_c(title))
 } 
 
@@ -253,8 +253,3 @@ acc_4 <-
   table(my_data_val_plasma$pred, my_data_val_plasma$diagnosis) %>%
   confusionMatrix() %>%
   print_acc(title = "PancRISK complete")
-
-
-(plot_roc(roc1, roc2, title = "Just Plasma") + plot_roc(roc3, roc4, title = "Simple")) / 
-  (plot_roc(roc5, roc6, title = "PancRISK without Plasma") + plot_roc(roc7, roc8, title = "PancRISK complete"))
-
