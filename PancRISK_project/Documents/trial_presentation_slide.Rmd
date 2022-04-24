@@ -13,11 +13,10 @@ output:
 knitr::opts_chunk$set(echo = FALSE)
 ```
 <style>
-  background: white;
+slides > slide {
+color: #515151;
+}
 </style>
-
-
-
 ## Introduction {.build}
 
 - background of the dataset 
@@ -41,19 +40,45 @@ Balkis will write her comments here
 - beautiful and meaningful plots
 - explanantion of the plots
 
+## Materials and Methods | Data modelling
+- 1:1 Training- and validation-set split
+- Multinomial logistic regression
+<br/><br/>
+- Candidate 1: binary plasma CA19_9
+- Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
+- Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
+- Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
+
 ## Materials and Methods | Data modelling {.columns-2}
+<style>
+slides > slide > hgroup + article {
+margin-top: 0px;
+}
+</style>
 ```{r}
+acc_1
+
 acc_2
 
 acc_3
 
 acc_4
 ```
-## Materials and Methods | Data modelling
+## Materials and Methods | Data modelling 
+<style>
+slides > slide {
+  background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
+  background-color: white;
+  }
+p { 
+    margin-top: -50px; 
+    margin-left: -200px;
+  } 
+</style>
 
-```{r, fig.width = 10}
-(plot_roc(roc1, roc2, title = "Just Plasma") + plot_roc(roc3, roc4, title = "Simple")) / 
-  (plot_roc(roc5, roc6, title = "PancRISK without Plasma") + plot_roc(roc7, roc8, title = "PancRISK complete"))
+```{r, fig.width = 14, fig.height = 5.2}
+(plot_roc(roc1, roc2, title = "Binary CA19_9") + plot_roc(roc9, roc10, title = "PancRISK (Sep. regressions)")) /
+  (plot_roc(roc5, roc6, title = "PancRISK without Plasma") + plot_roc(roc7, roc8, title = "PancRISK (Multinomial)"))
 ```
 
 ## Results {.build}
