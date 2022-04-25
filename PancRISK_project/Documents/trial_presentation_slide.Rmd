@@ -1,0 +1,131 @@
+---
+title: "22100 - R for Bio Data Science"
+subtitle : "GROUP 18  FINAL PROJECT "
+author: "Group 18"
+date: '2022-05-10'
+output: 
+  ioslides_presentation:
+    widescreen: true
+    incremental: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+```
+<style>
+slides > slide {
+color: #515151;
+}
+</style>
+## Introduction {.build}
+
+- background of the dataset 
+  - where does the dataset come from 
+  - aim of the investigation
+
+## Materials and Methods | Data cleansing
+
+Alem will write his comments here
+
+- raw data 
+  - how to handle "NA"
+  - missing values
+- code
+- clean data
+
+## Materials and Methods | Data wrangling and visualisation 
+
+Balkis will write her comments here 
+
+- beautiful and meaningful plots
+- explanantion of the plots
+
+## Materials and Methods | Data modelling
+- 1:1 Training- and validation-set split
+- Multinomial logistic regression
+<br/><br/>
+- Candidate 1: binary plasma CA19_9
+- Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
+- Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
+- Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
+
+## Materials and Methods | Data modelling {.columns-2}
+<style>
+slides > slide > hgroup + article {
+margin-top: 0px;
+}
+</style>
+```{r}
+acc_1
+
+acc_2
+
+acc_3
+
+acc_4
+```
+## Materials and Methods | Data modelling 
+<style>
+slides > slide {
+  background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
+  background-color: white;
+  }
+p { 
+    margin-top: -50px; 
+    margin-left: -200px;
+  } 
+</style>
+
+```{r, fig.width = 14, fig.height = 5.2}
+(plot_roc(roc1, roc2, title = "Binary CA19_9") + plot_roc(roc9, roc10, title = "PancRISK (Sep. regressions)")) /
+  (plot_roc(roc5, roc6, title = "PancRISK without Plasma") + plot_roc(roc7, roc8, title = "PancRISK (Multinomial)"))
+```
+
+## Results {.build}
+
+Results from modelling
+
+## Discussion {.build}
+
+- What we see from the model Is there any difference between our model and the model from the paper? 
+- Limitation of our model 
+- Any further improvements?
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## R Markdown
+
+This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
+
+## Slide with Bullets
+
+- Bullet 1
+- Bullet 2
+- Bullet 3
+
+## Slide with R Output
+
+```{r cars, echo = TRUE}
+summary(cars)
+```
+
+## Slide with Plot
+
+```{r pressure}
+plot(pressure)
+```
+
