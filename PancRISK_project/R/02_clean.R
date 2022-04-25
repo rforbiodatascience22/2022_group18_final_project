@@ -1,8 +1,3 @@
-# Load libraries ----------------------------------------------------------
-library("tidyverse")
-library("stringr")
-
-
 # Load data ---------------------------------------------------------------
 my_data <- read_tsv(file = "PancRISK_project/data/01_my_data.tsv")
 
