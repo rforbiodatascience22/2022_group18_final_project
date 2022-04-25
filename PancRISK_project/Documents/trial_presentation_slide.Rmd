@@ -42,9 +42,9 @@ Balkis will write her comments here
 
 ## Materials and Methods | Data modelling
 - 1:1 Training- and validation-set split
-- Multinomial logistic regression
+- Sepereate/Multinomial logistic regression
 <br/><br/>
-- Candidate 1: binary plasma CA19_9
+- Candidate 1: binary plasma CA19_9 (cutoff 37 U/ml)
 - Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
 - Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
 - Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
@@ -53,6 +53,10 @@ Balkis will write her comments here
 <style>
 slides > slide > hgroup + article {
 margin-top: 0px;
+}
+table {
+background-color: #f6f6f6;
+margin-block-end: 20px;
 }
 </style>
 ```{r}
@@ -70,15 +74,26 @@ slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
   background-color: white;
   }
+  
 p { 
-    margin-top: -50px; 
-    margin-left: -200px;
-  } 
+  margin-top: -50px; 
+  margin-left: 0px;
+} 
 </style>
 
-```{r, fig.width = 14, fig.height = 5.2}
-(plot_roc(roc1, roc2, title = "Binary CA19_9") + plot_roc(roc9, roc10, title = "PancRISK (Sep. regressions)")) /
-  (plot_roc(roc5, roc6, title = "PancRISK without Plasma") + plot_roc(roc7, roc8, title = "PancRISK (Multinomial)"))
+```{r, fig.width = 12, fig.height = 5.2}
+(plot_roc(roc1, roc2, 
+          title = "Binary CA19_9",
+          caption = "Used binary plasma CA19_9\nCorrected for age\nN = 390") + 
+ plot_roc(roc9, roc10, 
+          title = "PancRISK (Sep. regressions)",
+          caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nSeperate regressions for contrasts:\nControl vs. Benign and Benign vs. Malignant")) /
+(plot_roc(roc5, roc6, 
+          title = "PancRISK without Plasma",
+          caption = "Used REG1B, LYVE1 and TFF1\ncorrected for age and creatinine\nN = 590") + 
+ plot_roc(roc7, roc8, 
+          title = "PancRISK (Multinomial)",
+          caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nMultinom regression contrast Control vs. Benign vs. Malignant"))
 ```
 
 ## Results {.build}

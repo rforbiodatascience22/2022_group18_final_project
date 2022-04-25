@@ -63,23 +63,24 @@ print_acc <- function(data_1, data_2, title = "Group") {
     mutate(term = c("Sensitivity", "Specificity")) %>%
     full_join(table_1) %>%
     knitr::kable(align = c(rep('c', times = 3)), 
-                 col.names = NULL) %>%
+                 col.names = NULL,
+                 ) %>%
     #add_header_above(c("Benign vs. Malignant" = 1, " " = 1)) %>% 
-    add_header_above(c("a\na" = 1, setNames(1, "Control vs. Malignant"), setNames(1, "Benign vs. Malignant")), line = TRUE, bold = FALSE) %>%
-    add_header_above(c("Accurancy\na" = 1, setNames(1, accurancy_1), setNames(1, accurancy_2)), line = TRUE, bold = FALSE) %>%
+    add_header_above(c("\ \n\n \ " = 1, setNames(1, "Control vs. Malignant"), setNames(1, "Benign vs. Malignant")), line = TRUE, bold = FALSE) %>%
+    add_header_above(c("Accurancy\n\n \ " = 1, setNames(1, accurancy_1), setNames(1, accurancy_2)), line = TRUE, bold = FALSE) %>%
     add_header_above(c(setNames(3, paste("Performance - ", title)))) %>% 
     kable_styling(position = "center") %>%
     column_spec (1:3, 
                  border_left = "1px solid #ddd;", 
                  border_right = "1px solid #ddd;") %>%
     row_spec(row = 1:2, 
-             font_size = 24, 
+             font_size = 20, 
              hline_after = "1px solid #ddd;") %>%
     column_spec(column = 1, 
                 width = "6em")
 }
 
-plot_roc <- function(roc_render_1, roc_render_2, title = "ROC") {
+plot_roc <- function(roc_render_1, roc_render_2, title = "ROC", caption) {
   plotx_1 <- rev(roc_render_1$specificities)
   ploty_1 <- rev(roc_render_1$sensitivities)
   auc_1 <- roc_render_1$auc
@@ -118,9 +119,11 @@ plot_roc <- function(roc_render_1, roc_render_2, title = "ROC") {
                        breaks = seq(0, 1, 0.2), 
                        expand = c(0.001, 0.001)) +
     theme_minimal() + 
-    theme(plot.margin = unit(c(10, 10, 10, 10), "pt")) +
+    theme(plot.margin = unit(c(10, 80, 10, 10), "pt"),
+          plot.caption.position = "plot") +
     coord_equal() +
-    ggtitle(str_c(title))
+    ggtitle(str_c(title)) +
+    labs(caption = caption)
 } 
 
 my_data_clean <-
