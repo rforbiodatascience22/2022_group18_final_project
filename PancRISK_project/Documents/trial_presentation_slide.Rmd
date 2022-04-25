@@ -67,7 +67,7 @@ background-color: #f6f6f6;
 margin-block-end: 20px;
 }
 </style>
-```{r, eval=FALSE}
+```{r, echo = FALSE}
 acc_1
 
 acc_2
@@ -88,7 +88,7 @@ p {
   margin-left: 0px;
 } 
 </style>
-```{r, fig.width = 12, fig.height = 5.2}
+```{r, fig.width = 12, fig.height = 5.2, echo = FALSE}
 (plot_roc(roc1, roc2, 
           title = "Binary CA19_9",
           caption = "Used binary plasma CA19_9\nCorrected for age\nN = 390") + 
