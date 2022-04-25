@@ -76,7 +76,7 @@ acc_3
 
 acc_4
 ```
-## Materials and Methods | Data modelling 
+## Materials and Methods | Data modelling
 <style>
 slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
@@ -84,7 +84,7 @@ slides > slide {
   }
   
 p { 
-  margin-top: -50px; 
+  margin-top: 0px; 
   margin-left: 0px;
 } 
 </style>
