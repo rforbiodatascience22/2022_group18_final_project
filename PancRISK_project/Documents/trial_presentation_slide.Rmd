@@ -6,41 +6,49 @@ date: '2022-05-10'
 output: 
   ioslides_presentation:
     widescreen: true
-    incremental: true
+    incremental: false
 ---
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
-```
 <style>
 slides > slide {
 color: #515151;
 }
 </style>
-## Introduction {.build}
-
+## Introduction
 - background of the dataset 
   - where does the dataset come from 
   - aim of the investigation
 
-## Materials and Methods | Data cleansing
-
-Alem will write his comments here
-
-- raw data 
-  - how to handle "NA"
-  - missing values
-- code
-- clean data
-
-## Materials and Methods | Data wrangling and visualisation 
-
-Balkis will write her comments here 
+## Materials and Methods | Data cleansing: from csv to tsv, assigned NA as '' or 'NA'
+<style> 
+pre {font-size: 15px;}
+</style>
+```{r, eval=FALSE}
+my_data_clean <- my_data %>% 
+  as_tibble %>% 
+  bind_cols %>% 
+  mutate(diagnosis = case_when(diagnosis == 1 ~ "control",
+                               diagnosis == 2 ~ "benign",
+                               diagnosis == 3 ~ "malignant"),
+         sex = case_when(sex == "F" ~ "Female",
+                         sex == "M" ~ "Male"),
+         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
+                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
+         sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
+                                      sample_origin == "UCL" ~ "United Kingdom",
+                                      sample_origin == "LIV" ~ "United Kingdom",
+                                      sample_origin == "ESP" ~ "Spain"),
+         sample_id = gsub('^.', '', sample_id)) %>% 
+  select(.,
+         -sample_origin,
+         -benign_sample_diagnosis)
+```
+## Materials and Methods | Data visualisation 
 
 - beautiful and meaningful plots
 - explanantion of the plots
 
 ## Materials and Methods | Data modelling
+
 - 1:1 Training- and validation-set split
 - Sepereate/Multinomial logistic regression
 <br/><br/>
@@ -59,7 +67,7 @@ background-color: #f6f6f6;
 margin-block-end: 20px;
 }
 </style>
-```{r}
+```{r, eval=FALSE}
 acc_1
 
 acc_2
@@ -80,7 +88,6 @@ p {
   margin-left: 0px;
 } 
 </style>
-
 ```{r, fig.width = 12, fig.height = 5.2}
 (plot_roc(roc1, roc2, 
           title = "Binary CA19_9",
@@ -96,51 +103,12 @@ p {
           caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nMultinom regression contrast Control vs. Benign vs. Malignant"))
 ```
 
-## Results {.build}
+## Results
 
-Results from modelling
+- Results from modelling
 
-## Discussion {.build}
+## Discussion
 
 - What we see from the model Is there any difference between our model and the model from the paper? 
 - Limitation of our model 
 - Any further improvements?
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-## R Markdown
-
-This is an R Markdown presentation. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document.
-
-## Slide with Bullets
-
-- Bullet 1
-- Bullet 2
-- Bullet 3
-
-## Slide with R Output
-
-```{r cars, echo = TRUE}
-summary(cars)
-```
-
-## Slide with Plot
-
-```{r pressure}
-plot(pressure)
-```
-
