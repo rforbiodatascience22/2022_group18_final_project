@@ -1,8 +1,3 @@
-# Load libraries ----------------------------------------------------------
-library("tidyverse")
-library("stringr")
-
-
 # Load data ---------------------------------------------------------------
 my_data <- read_tsv(file = "PancRISK_project/data/01_my_data.tsv")
 
@@ -22,7 +17,9 @@ my_data_clean <- my_data %>%
                                       sample_origin == "UCL" ~ "United Kingdom",
                                       sample_origin == "LIV" ~ "United Kingdom",
                                       sample_origin == "ESP" ~ "Spain"),
-         sample_id = gsub('^.', '', sample_id)) %>% 
+         sample_id = gsub(pattern = '^.', 
+                          replacement = '', 
+                          x = sample_id)) %>% 
   select(.,
          -sample_origin,
          -benign_sample_diagnosis)

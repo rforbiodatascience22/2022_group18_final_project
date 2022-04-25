@@ -1,7 +1,3 @@
-# Load libraries ----------------------------------------------------------
-library("tidyverse")
-
-
 # Load data ---------------------------------------------------------------
 my_data_raw <- read_csv(file = "PancRISK_project/data/_raw/PancRISK_raw.csv", 
                         na = c("", "NA"))

@@ -1,3 +1,20 @@
+# Load libraries ----------------------------------------------------------
+library("tidyverse")
+library("stringr")
+library("patchwork")
+library("ggridges")
+library("scales")
+library("nnet")
+library("pROC")
+library("caret")
+library("broom")
+library("knitr")
+library("kableExtra")
+library("cutoff")
+library("cowplot")
+
+# Load functions ----------------------------------------------------------
+source(file = "PancRISK_project/R/99_proj_functions.R")
 # Run all scripts ---------------------------------------------------------
 source(file = "PancRISK_project/R/01_load.R")
 source(file = "PancRISK_project/R/02_clean.R")
