@@ -1,4 +1,4 @@
-my_data_cleanerer <-
+my_data_cleaner <-
   my_data_clean %>% 
   mutate(diagnosis = factor(diagnosis)) %>%
   mutate(sex = factor(sex)) %>%
