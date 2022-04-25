@@ -7,16 +7,44 @@ date: May 10, 2022
 output:
   ioslides_presentation:
     template: quarterly-report.html
+editor_options: 
+  markdown: 
+    wrap: 72
 ---
 
-# Data loading and cleaning | Subtitle
+# Data loading and cleaning \| Subtitle
 
-## Alem will write his comments here
+## Data wrangling
+Loaded data from csv to tsv, assigned NA as '' or 'NA'
+<style> 
+pre {font-size: 15px;}
+</style>
 
-# Data wrangling and visualisation | Subtitle
+```{r, eval=FALSE}
+my_data_clean <- my_data %>% 
+  as_tibble %>% 
+  bind_cols %>% 
+  mutate(diagnosis = case_when(diagnosis == 1 ~ "control",
+                               diagnosis == 2 ~ "benign",
+                               diagnosis == 3 ~ "malignant"),
+         sex = case_when(sex == "F" ~ "Female",
+                         sex == "M" ~ "Male"),
+         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
+                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
+         sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
+                                      sample_origin == "UCL" ~ "United Kingdom",
+                                      sample_origin == "LIV" ~ "United Kingdom",
+                                      sample_origin == "ESP" ~ "Spain"),
+         sample_id = gsub('^.', '', sample_id)) %>% 
+  select(.,
+         -sample_origin,
+         -benign_sample_diagnosis)
+```
+
+# Data wrangling and visualisation \| Subtitle
 
 ## Balkis will write her comments here
 
-# Data modelling | Subtitle
+# Data modelling \| Subtitle
 
 ## Maurice will write his comments here
