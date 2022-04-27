@@ -1,16 +1,19 @@
 data_aug_pca <- pca_fit %>% 
   augment(my_data_clean_PCA)
 
+
+# This model includes all the data features 
+
 #K-means onto the data 
 data_aug_pca_aug_k_means <- data_aug_pca %>%
-  select(patient_cohort,age,sex, diagnosis ,stage , plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
+  select(patient_cohort,age,sex, plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
   kmeans(centers = 3)%>%
   augment(data_aug_pca) %>% 
   rename(clusters_org = .cluster)%>%
   mutate(clusters_org = case_when(
-    clusters_org == 3 ~ "benign",
-    clusters_org == 1 ~ "malignant",
-    clusters_org == 2 ~ "control"))
+    clusters_org == 1 ~ "1",
+    clusters_org == 2 ~ "2",
+    clusters_org == 3 ~ "3"))
 
 #K-means onto the PC1 and PC2
 k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
@@ -19,9 +22,9 @@ k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
   augment(data_aug_pca_aug_k_means) %>% 
   rename(clusters_pca = .cluster)%>%
   mutate(clusters_pca = case_when(
-    clusters_pca == 2 ~ "benign",
-    clusters_pca == 1 ~ "malignant",
-    clusters_pca == 3 ~ "control"),
+    clusters_pca == 1 ~ "1",
+    clusters_pca == 2 ~ "2",
+    clusters_pca == 3 ~ "3"),
     diagnosis = case_when(
       diagnosis == 0 ~ "control",
       diagnosis == 1 ~ "benign",
@@ -68,6 +71,69 @@ patchwork + plot_annotation(
   theme(legend.position = 'right')
 
 patchwork
+
+
+
+# Let's try to perform the K-means including only a subset of the features 
+#plasma_CA19_9 alone
+#LYVE1, REG1B, TFF1
+#and the complete model which have already been done above 
+
+
+
+plasma_CA19_9_alone_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex,plasma_CA19_9 ) %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)
+
+biomarkers_only_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex, LYVE1, REG1B, TFF1)  %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)
+
+complete_model_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex, LYVE1, REG1B, TFF1,plasma_CA19_9)  %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)
+
+
+plasma_CA19_9_alone_plot <- plasma_CA19_9_alone_k_means %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
+  geom_point() +
+  labs( title = " plasma_CA19_9 ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom")+
+  theme_minimal(8)
+
+biomarkers_only_plot <- biomarkers_only_k_means %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
+  geom_point() +
+  labs( title = "LYVE1+REG1B+ TFF1 ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom")+
+  theme_minimal(8)
+
+complete_model_plot <- complete_model_k_means %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
+  geom_point() +
+  labs( title = "  LYVE1+REG1B+TFF1+plasma_CA19_9 ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom")+
+  theme_minimal(8)
+
+patchwork_ <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot) 
+patchwork_ + plot_annotation(
+  title = "K-means results " ,
+  caption= "Data from Silvana Debernardi et al" )& 
+  theme(legend.position = 'bottom')
+
+
 
 
 #PCA only for the malignant samples 
