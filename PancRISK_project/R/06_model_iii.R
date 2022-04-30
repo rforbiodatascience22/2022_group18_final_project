@@ -34,7 +34,7 @@ k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
 pl1 <- k_means_onto_PC_1_2 %>%
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = diagnosis)) +
   geom_point() +
-  labs( title = "The true clusters ploted into the PC1 and PC2 space ") +
+  labs( title = "The true clusters ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
   theme(legend.position = "bottom")+
@@ -64,7 +64,7 @@ pl3 <- k_means_onto_PC_1_2 %>%
   theme_minimal(8)
 
 
-patchwork <-  (pl1 /pl2 / pl3) 
+patchwork <-  (pl1 /pl2 / pl3) + plot_layout(guides = 'collect')
 patchwork + plot_annotation(
   title = "K-means results " ,
   caption= "Data from Silvana Debernardi et al" )& 
@@ -106,7 +106,7 @@ plasma_CA19_9_alone_plot <- plasma_CA19_9_alone_k_means %>%
   labs( title = " plasma_CA19_9 ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "none")+
   theme_minimal(8)
 
 biomarkers_only_plot <- biomarkers_only_k_means %>%
@@ -115,7 +115,7 @@ biomarkers_only_plot <- biomarkers_only_k_means %>%
   labs( title = "LYVE1+REG1B+ TFF1 ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "none")+
   theme_minimal(8)
 
 complete_model_plot <- complete_model_k_means %>%
@@ -124,14 +124,14 @@ complete_model_plot <- complete_model_k_means %>%
   labs( title = "  LYVE1+REG1B+TFF1+plasma_CA19_9 ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "none")+
   theme_minimal(8)
 
-patchwork_ <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot) 
-patchwork_ + plot_annotation(
+patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
+patchwork_diagnosis + plot_annotation(
   title = "K-means results " ,
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'bottom')
+  caption= "Data from Silvana Debernardi et al" )&
+  theme(legend.position = "bottom")
 
 
 

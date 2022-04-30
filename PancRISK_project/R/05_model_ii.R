@@ -39,9 +39,11 @@ Data_onto_PCA_plot <- pca_fit %>%
     values = c(control ="#009E73" , malignant = "#0072B2", benign = "#D55E00")) + 
   theme_half_open(12) + 
   background_grid()+
-  theme(legend.position = "right")+
-  labs( title = "Data projected onto the first two PCs ",
-        subtitle = "The data points have been colored according to the diagnosis status") 
+  theme(legend.position = "right",
+        #plot.subtitle =  element_text(size=8),
+        plot.title = element_text(size=10))+
+  labs( title = "Data projected onto the first two PCs ")
+        #subtitle = "The data points have been colored according to the diagnosis status") 
 
 
 #  rotation matrix plot
@@ -94,11 +96,13 @@ cumulative_variance_plot <- pca_fit %>%
     geom_hline(yintercept= 0.64, 
              linetype="dashed", 
              color = "black")+
-  labs( title = "The cumulative explained variance ",
-        subtitle = "Together the first three PCs explains more than 60% of the total data variance") +
+  labs( title = "The cumulative explained variance ")+
+        #subtitle = "Together the first three PCs explains more than 60% of the total data variance") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        plot.subtitle =  element_text(size=8),
+        plot.title = element_text(size=10))+
   theme_minimal_hgrid(12)
 
 patchwork <-  (Data_onto_PCA_plot |  cumulative_variance_plot )
@@ -145,9 +149,11 @@ malignant_onto_PCA_plot <- malignant_PCA_fit %>%
     values = c("1" ="#009E73" , "2" = "#0072B2", "3" = "#D55E00" , "4" = "#000000")) + 
   theme_half_open(12) + 
   background_grid()+
-  theme(legend.position = "right")+
-  labs( title = "Data projected onto the first two PCs ",
-        subtitle = "The data points have been colored according to the PDAC stage ") 
+  theme(legend.position = "right",
+        #plot.subtitle =  element_text(size=8),
+        plot.title = element_text(size=10))+
+  labs( title = "Data projected onto the first two PCs ")
+        #subtitle = "The data points have been colored according to the PDAC stage ") 
 
 #  rotation matrix plot
 malignant_PCA_fit %>%
@@ -206,11 +212,13 @@ malignant_cumulative_variance_plot <- malignant_PCA_fit %>%
     breaks = c(0,0.1,0.2,0.3,0.4,0.5,0.6,0.7,0.8,0.9,1),
     labels = scales::percent_format(),
     expand = expansion(mult = c(0, 0.1))) +
-  labs( title = "The cumulative explained variance ",
-        subtitle = "Together the first three PCs explains around 60% of the total data variance") +
+  labs( title = "The cumulative explained variance ")+
+        #subtitle = "Together the first three PCs explains around 60% of the total data variance") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        #plot.subtitle =  element_text(size=8),
+        plot.title = element_text(size=10))+
   theme_minimal_hgrid(12)
 
 
