@@ -44,53 +44,82 @@ knitr::include_graphics('./flowchart.png')
 ```
 </div>
 
-## Materials and Methods | Data visualisation 
+=======
+## Modelling 
+=======
+
 <style>
 slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
   background-color: white;
   }
-  
-p { 
-  margin-top: 0px; 
-  margin-left: 0px;
+img { 
+ margin-top: -90px; 
+  margin-left: 50px;
 } 
 </style>
-```{r, fig.width = 7, fig.height = 5, echo = FALSE}
+ 
+<font size="2"> PCA and K-means  
+</font>
 
 
+```{r, fig.width = 8.5, fig.height = 6, echo = FALSE}
 
-patchwork <-  (Data_onto_PCA_plot |  cumulative_variance_plot )
-malignant_patchwork <-  (malignant_onto_PCA_plot |  malignant_cumulative_variance_plot )
 
+layout <- '
+AB
+'
+patchwork <- wrap_plots(A=Data_onto_PCA_plot ,
+           B=cumulative_variance_plot ,
+           design = layout)
+           
+
+malignant_patchwork <-  wrap_plots(A=malignant_onto_PCA_plot ,
+           B=malignant_cumulative_variance_plot ,
+           design = layout)
+  
 
 patchwork<-patchwork + plot_annotation(
   title = "PCA results " ,
   subtitle = "The first two PCs can discriminate between patients suffering from PC from the control and benign diagnosed ones  ",
   caption= "Data from Silvana Debernardi et al" )& 
   theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=6),
-        plot.title = element_text(size=10))
+        plot.subtitle =  element_text(size=4),
+        plot.title = element_text(size=8))
 
 malignant_patchwork<- malignant_patchwork + plot_annotation(
   title = "PCA results " ,
   subtitle = "The first two PCs can't really discriminate between the 4 PDAC stages ",
   caption= "Data from Silvana Debernardi et al" )& 
   theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=6),
-        plot.title = element_text(size=10))
+        plot.subtitle =  element_text(size=4),
+        plot.title = element_text(size=8))
 
-patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot | biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
-patchwork_diagnosis<- patchwork_diagnosis + plot_annotation(
-  title = "K-means results " ,
+
+patchwork_diagnosis_1 <-  (pl1|plasma_CA19_9_alone_plot) +
+  #plot_layout(guides = 'collect')+ 
+  plot_annotation(
+  title = "K-means results " )&
+  theme(legend.position = "bottom")
+
+patchwork_diagnosis_2 <-(biomarkers_only_plot|complete_model_plot)+ 
+  #plot_layout(guides = 'collect') + 
+  plot_annotation(
   caption= "Data from Silvana Debernardi et al" )&
   theme(legend.position = "bottom")
 
 
-patchwork_PCA<- patchwork + malignant_patchwork
+top_patchwork <-  wrap_plots(A=patchwork ,
+           B=patchwork_diagnosis_1 )
+           #design = layout)
+  
+bottom_patchwork <-  wrap_plots(A=malignant_patchwork ,
+           B=patchwork_diagnosis_2 )
+           #design = layout)
 
 
-patchwork_PCA/patchwork_diagnosis
+
+top_patchwork/bottom_patchwork 
 
 
 ```
