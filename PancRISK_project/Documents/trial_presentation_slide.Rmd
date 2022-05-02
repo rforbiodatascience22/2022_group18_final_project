@@ -44,7 +44,20 @@ knitr::include_graphics('./flowchart.png')
 ```
 </div>
 
-## Modelling 
+## Materials and Methods | Data modelling
+
+- 1:1 Training- and validation-set split
+- Seperate/Multinomial logistic regression (glm)
+<br/><br/>
+- Candidate 1: binary plasma CA19_9 (cutoff 37 U/ml)
+- Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
+- Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
+- Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
+
+## Results | Data visualization
+- text
+
+## Results | PCA & K-means
 <style>
 slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
@@ -127,17 +140,7 @@ top_patchwork/bottom_patchwork
 ```
 </div>
 
-## Materials and Methods | Data modelling
-
-- 1:1 Training- and validation-set split
-- Seperate/Multinomial logistic regression (glm)
-<br/><br/>
-- Candidate 1: binary plasma CA19_9 (cutoff 37 U/ml)
-- Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
-- Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
-- Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
-
-## Materials and Methods | Data modelling
+## Results | Data modelling
 <style>
 slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
@@ -161,26 +164,6 @@ slides > slide {
           caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nMultinom regression contrast Control vs. Benign vs. Malignant"))
 ```
 </div>
-
-## Results
-```{r, fig.width = 6, fig.height = 6.3, echo = FALSE}
-(patchwork + plot_annotation(
-  title = "PCA results " ,
-  subtitle = "The first two PCs can discriminate between patients suffering from PC from the control and benign diagnosed ones  ",
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=6),
-        plot.title = element_text(size=10)))/
-(malignant_patchwork + plot_annotation(
-  title = "PCA results " ,
-  subtitle = "The first two PCs can't really discriminate between the 4 PDAC stages ",
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=6),
-        plot.title = element_text(size=10)))
-```
-
-- Results from modelling
 
 ## Discussion
 
