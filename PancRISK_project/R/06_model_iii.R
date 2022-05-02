@@ -1,48 +1,3 @@
-
-
-## plot  showing the real clusters on PC1 and PC2 space
-
-pl1 <- k_means_onto_PC_1_2 %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = diagnosis)) +
-  geom_point() +
-  labs( title = "The true clusters ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom")+
-  theme_minimal(8)
-
-#The  clusters predicted by the K means on the whole data plot into PC1 and PC2 space
-
-pl2 <- data_aug_pca_aug_k_means %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
-  geom_point() +
-  labs( subtitle = "The clusters predicted by K-means performed on the original data plotted into the PC1 and PC2 space ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom")+
-  theme_minimal(8)
-
-
-#The  clusters predicted by the K means on the data fitted into PC1 and PC2  plotted  into PC1 and PC2 space
-
-pl3 <- k_means_onto_PC_1_2 %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_pca)) +
-  geom_point() +
-  labs( subtitle = "The clusters predicted by K-means performed on the data fitted onto PC1 and PC2 plotted into the PC1 and PC2 space ")+
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom")+
-  theme_minimal(8)
-
-
-patchwork <-  (pl1 /pl2 / pl3) + plot_layout(guides = 'collect')
-patchwork + plot_annotation(
-  title = "K-means results " ,
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'right')
-
-
-
 ## Augmenting the clean data with the data fitted on each PC (will be used in for the K-means )
 
 data_aug_pca <- pca_fit %>% 
@@ -106,6 +61,49 @@ complete_model_k_means <- data_aug_pca %>%
   kmeans(centers = 3)%>%
   augment(data_aug_pca) %>% 
   rename(clusters_org = .cluster)
+
+
+## plot  showing the real clusters on PC1 and PC2 space
+
+pl1 <- k_means_onto_PC_1_2 %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = diagnosis)) +
+  geom_point() +
+  labs( title = "The true clusters ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom")+
+  theme_minimal(8)
+
+#The  clusters predicted by the K means on the whole data plot into PC1 and PC2 space
+
+pl2 <- data_aug_pca_aug_k_means %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
+  geom_point() +
+  labs( subtitle = "The clusters predicted by K-means performed on the original data plotted into the PC1 and PC2 space ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom")+
+  theme_minimal(8)
+
+
+#The  clusters predicted by the K means on the data fitted into PC1 and PC2  plotted  into PC1 and PC2 space
+
+pl3 <- k_means_onto_PC_1_2 %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_pca)) +
+  geom_point() +
+  labs( subtitle = "The clusters predicted by K-means performed on the data fitted onto PC1 and PC2 plotted into the PC1 and PC2 space ")+
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom")+
+  theme_minimal(8)
+
+
+patchwork <-  (pl1 /pl2 / pl3) + plot_layout(guides = 'collect')
+patchwork + plot_annotation(
+  title = "K-means results " ,
+  caption= "Data from Silvana Debernardi et al" )& 
+  theme(legend.position = 'right')
+
 
 
 
