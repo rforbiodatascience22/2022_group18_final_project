@@ -4,32 +4,14 @@ library("broom")
 library("cowplot")
 library("tidyverse")
 
-my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,stage , plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
-  mutate(patient_cohort = case_when(
-    patient_cohort == "Cohort1" ~ 0,
-    patient_cohort == "Cohort2" ~ 1),
-    diagnosis = case_when(
-      diagnosis == "control" ~ 0,
-      diagnosis == "benign" ~ 1,
-      diagnosis == "malignant" ~ 2),
-    sex = case_when(
-      sex == "Male" ~ 0,
-      sex == "Female" ~ 1),
-    stage = case_when(
-      stage  == "IA" ~ 1,
-      stage  == "IB" ~ 1,
-      stage  == "IIA" ~ 2,
-      stage  == "IIB" ~ 2,
-      stage  == "III" ~ 3,
-      stage  == "IV" ~ 4),
-    stage = replace_na(stage,0)) %>%
-  drop_na(REG1B, LYVE1, TFF1, plasma_CA19_9)
 
+# SVD decomposition of the data
 
 pca_fit <- my_data_clean_PCA %>% 
   select(where(is.numeric)) %>% # retain only numeric columns
   prcomp(scale = TRUE) # do PCA on scaled data
 
+# Biplot 
 
 Data_onto_PCA_plot <- pca_fit %>%
   augment(my_data_clean) %>% # add original dataset back in
@@ -46,8 +28,7 @@ Data_onto_PCA_plot <- pca_fit %>%
         #subtitle = "The data points have been colored according to the diagnosis status") 
 
 
-#  rotation matrix plot
-
+# Rotation matrix plot
 
 arrow_style <- arrow(
   angle = 20, ends = "first", type = "closed", length = grid::unit(8, "pt")
@@ -67,7 +48,7 @@ rotation_matrix_plot <- pca_fit %>%
   coord_fixed() + # fix aspect ratio to 1:1
   theme_minimal_grid(12)
 
-# Each PC explained variance scree plot
+# Contribution of each PC to the data explained variance 
 
 PC_contribution_plot <- pca_fit %>%
   tidy(matrix = "eigenvalues") %>%
@@ -85,6 +66,7 @@ PC_contribution_plot <- pca_fit %>%
   theme_minimal_hgrid(12)
 
 # Scree plot =  cumulative explained variance plot 
+
 cumulative_variance_plot <- pca_fit %>%
   tidy(matrix = "eigenvalues") %>%
   ggplot(aes(PC, cumulative)) +
@@ -105,6 +87,7 @@ cumulative_variance_plot <- pca_fit %>%
         plot.title = element_text(size=10))+
   theme_minimal_hgrid(12)
 
+
 patchwork <-  (Data_onto_PCA_plot |  cumulative_variance_plot )
 patchwork + plot_annotation(
   title = "PCA results " ,
@@ -113,6 +96,8 @@ patchwork + plot_annotation(
   theme(legend.position = 'bottom')
 
 
+
+# Filtering only malignanat samples 
 
 malignant_PCA <- my_data_clean_PCA %>% 
   filter(diagnosis==2)%>%
@@ -125,6 +110,8 @@ malignant_PCA <- my_data_clean_PCA %>%
          LYVE1, 
          REG1B, 
          TFF1)
+
+# SVD decomposition of the  malignant data 
 
 malignant_PCA_fit <- malignant_PCA %>% 
   select(where(is.numeric)) %>% # retain only numeric columns
@@ -139,6 +126,7 @@ malignant_onto_PCA_plot <- malignant_PCA_fit %>%
   augment(malignant_PCA)
 
 
+# Biplot of malignant data 
 
 malignant_onto_PCA_plot <- malignant_PCA_fit %>%
   augment(malignant_PCA) %>%# add original dataset back in
@@ -155,7 +143,7 @@ malignant_onto_PCA_plot <- malignant_PCA_fit %>%
   labs( title = "Data projected onto the first two PCs ")
         #subtitle = "The data points have been colored according to the PDAC stage ") 
 
-#  rotation matrix plot
+#  Rotation matrix plot
 malignant_PCA_fit %>%
   tidy(matrix = "rotation")
 
@@ -179,7 +167,7 @@ malignant_rotation_matrix_plot <- malignant_PCA_fit %>%
 
 
 
-# Each PC explained variance scree plot
+# The variance of the malignant data explained by each PC
 
 malignant_PC_contribution_plot <- malignant_PCA_fit %>%
   tidy(matrix = "eigenvalues") %>%
