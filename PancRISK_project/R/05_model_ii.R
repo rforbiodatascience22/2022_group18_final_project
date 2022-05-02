@@ -6,7 +6,6 @@ library("tidyverse")
 
 
 # SVD decomposition of the data
-View(my_data_clean_PCA)
 
 pca_fit <- my_data_clean_PCA  %>%
   select(where(is.numeric)) %>% # retain only numeric columns
