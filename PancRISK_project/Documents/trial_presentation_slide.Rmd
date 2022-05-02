@@ -1,8 +1,9 @@
 ---
 title: "22100 - R for Bio Data Science"
-subtitle : "GROUP 18  FINAL PROJECT "
+subtitle : "Final project"
 author: "Group 18"
-date: '2022-05-10'
+
+date: '2022-05-09'
 output: 
   ioslides_presentation:
     widescreen: true
@@ -99,7 +100,7 @@ patchwork_PCA/patchwork_diagnosis
 ## Materials and Methods | Data modelling
 
 - 1:1 Training- and validation-set split
-- Sepereate/Multinomial logistic regression
+- Seperate/Multinomial logistic regression (glm)
 <br/><br/>
 - Candidate 1: binary plasma CA19_9 (cutoff 37 U/ml)
 - Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
@@ -114,8 +115,8 @@ slides > slide {
   }
   
 p { 
-  margin-top: 0px; 
-  margin-left: 0px;
+  margin-top: -40px; 
+  margin-left: -40px;
 } 
 </style>
 ```{r, fig.width = 12, fig.height = 5.2, echo = FALSE}
