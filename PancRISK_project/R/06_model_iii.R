@@ -75,7 +75,8 @@ pl1 <- k_means_onto_PC_1_2 %>%
   labs( title = "The true clusters ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "bottom",
+                plot.title = element_text(size=8))+
   theme_minimal(8)
 
 #The  clusters predicted by the K means on the whole data plot into PC1 and PC2 space
@@ -86,7 +87,8 @@ pl2 <- data_aug_pca_aug_k_means %>%
   labs( subtitle = "The clusters predicted by K-means performed on the original data plotted into the PC1 and PC2 space ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "bottom",
+        plot.title = element_text(size=8))+
   theme_minimal(8)
 
 
@@ -98,7 +100,8 @@ pl3 <- k_means_onto_PC_1_2 %>%
   labs( subtitle = "The clusters predicted by K-means performed on the data fitted onto PC1 and PC2 plotted into the PC1 and PC2 space ")+
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "bottom")+
+  theme(legend.position = "bottom",
+        plot.title = element_text(size=8))+
   theme_minimal(8)
 
 
@@ -116,7 +119,8 @@ plasma_CA19_9_alone_plot <- plasma_CA19_9_alone_k_means %>%
   labs( title = " plasma_CA19_9 ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
   theme_minimal(8)
 
 biomarkers_only_plot <- biomarkers_only_k_means %>%
@@ -125,7 +129,8 @@ biomarkers_only_plot <- biomarkers_only_k_means %>%
   labs( title = "LYVE1+REG1B+ TFF1 ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
   theme_minimal(8)
 
 complete_model_plot <- complete_model_k_means %>%
@@ -134,10 +139,12 @@ complete_model_plot <- complete_model_k_means %>%
   labs( title = "  LYVE1+REG1B+TFF1+plasma_CA19_9 ") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
   theme_minimal(8)
 
-patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
+patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot)+ 
+  plot_layout(guides = 'collect') 
 patchwork_diagnosis + plot_annotation(
   title = "K-means results " ,
   caption= "Data from Silvana Debernardi et al" )&

@@ -52,11 +52,9 @@ slides > slide {
   }
 </style>
  
-<font size="2"> PCA and K-means  
-</font>
 
-<div style = "margin-top: -90px; margin-left: 50px;">
-```{r, fig.width = 8.5, fig.height = 6, echo = FALSE}
+<div style = "margin-top: -50px; margin-left: -30px; scale: 100%;">
+```{r, fig.align='center',fig.width = 8.5, fig.height = 6, echo = FALSE}
 
 
 layout <- '
@@ -77,7 +75,7 @@ patchwork<-patchwork + plot_annotation(
   subtitle = "The first two PCs can discriminate between patients suffering from PC from the control and benign diagnosed ones  ",
   caption= "Data from Silvana Debernardi et al" )& 
   theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=4),
+        plot.subtitle =  element_text(size=6),
         plot.title = element_text(size=8))
 
 malignant_patchwork<- malignant_patchwork + plot_annotation(
@@ -85,29 +83,40 @@ malignant_patchwork<- malignant_patchwork + plot_annotation(
   subtitle = "The first two PCs can't really discriminate between the 4 PDAC stages ",
   caption= "Data from Silvana Debernardi et al" )& 
   theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=4),
+        plot.subtitle =  element_text(size=6),
         plot.title = element_text(size=8))
 
 
 patchwork_diagnosis_1 <-  (pl1|plasma_CA19_9_alone_plot) +
-  #plot_layout(guides = 'collect')+ 
+  plot_layout(guides = 'collect')+ 
   plot_annotation(
   title = "K-means results " )&
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        plot.title = element_text(size=7))
 
 patchwork_diagnosis_2 <-(biomarkers_only_plot|complete_model_plot)+ 
-  #plot_layout(guides = 'collect') + 
+  plot_layout(guides = 'collect') + 
   plot_annotation(
   caption= "Data from Silvana Debernardi et al" )&
-  theme(legend.position = "bottom")
+  theme(legend.position = "bottom",
+        plot.title = element_text(size=7))
 
 
-top_patchwork <-  wrap_plots(A=patchwork ,
-           B=patchwork_diagnosis_1 )
+
+
+top_patchwork <-(patchwork + theme(plot.margin = unit(c(0,3,0,0), "pt")))|
+(patchwork_diagnosis_1 + theme(plot.margin = unit(c(0,0,0,10), "pt")))
+
+bottom_patchwork <-(malignant_patchwork + theme(plot.margin = unit(c(0,3,0,0), "pt")))|
+(patchwork_diagnosis_2 + theme(plot.margin = unit(c(0,0,0,10), "pt")))
+
+
+#top_patchwork <-  wrap_plots(A=patchwork ,
+           #B=patchwork_diagnosis_1 )
            #design = layout)
   
-bottom_patchwork <-  wrap_plots(A=malignant_patchwork ,
-           B=patchwork_diagnosis_2 )
+#bottom_patchwork <-  wrap_plots(A=malignant_patchwork ,
+           #B=patchwork_diagnosis_2 )
            #design = layout)
 
 
