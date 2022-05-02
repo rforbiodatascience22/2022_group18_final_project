@@ -1,5 +1,7 @@
 ## Modelling data augment
 
+my_data_clean <- read_tsv(file = "PancRISK_project/data/02_my_data_clean.tsv")
+
 my_data_cleaner <-
   my_data_clean %>% 
   mutate(diagnosis = factor(diagnosis)) %>%
