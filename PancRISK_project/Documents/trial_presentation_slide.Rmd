@@ -88,7 +88,7 @@ patchwork_diagnosis<- patchwork_diagnosis + plot_annotation(
   theme(legend.position = "bottom")
 
 
-patchwork_PCA<- patchwork + malignant_patchwork + plot_layout(widths = 1)
+patchwork_PCA<- patchwork + malignant_patchwork
 
 
 patchwork_PCA/patchwork_diagnosis
