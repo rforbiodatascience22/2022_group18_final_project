@@ -62,5 +62,6 @@ my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,s
     stage = replace_na(stage,0)) %>%
   drop_na(REG1B, LYVE1, TFF1, plasma_CA19_9)
 
-
+write_tsv(x = my_data_clean_PCA,
+          file = "PancRISK_project/data/04_my_data_clean_PCA.tsv")
 

@@ -14,38 +14,40 @@ slides > slide {
 color: #515151;
 }
 </style>
-## Materials and Methods | Introduction
-- background of the dataset 
-  - where does the dataset come from 
-  - aim of the investigation
 
-## Materials and Methods | Data cleansing: from csv to tsv, assigned NA as '' or 'NA'
-<style> 
-pre {font-size: 15px;}
+## Introduction
+- Data
+  - open source: https://doi.org/10.1371/journal.pmed.1003489
+  
+- Control study: PancRISK
+  - Blood biomarker; plasma_CA19_9
+  - Normalization; creatinine
+  - Urinary biomarkers; REG1A, REG1B, LYVE1, TFF1
+  - Diagnosis; control, benign, malignant
+
+- Aim
+  - Visual exploration
+  - Urinary biomarker performance
+  - Evaluation of diagnosis prediction
+
+## Materials and Methods | Flow chart
+<style>
+slides > slide {
+  background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
+  background-color: white;
+  }
+  
+img { 
+  margin-top: -90px; 
+  margin-left: 300px;
+  width: 70%;
+} 
 </style>
-```{r, eval=FALSE}
-my_data_clean <- my_data %>% 
-  as_tibble %>% 
-  bind_cols %>% 
-  mutate(diagnosis = case_when(diagnosis == 1 ~ "control",
-                               diagnosis == 2 ~ "benign",
-                               diagnosis == 3 ~ "malignant"),
-         sex = case_when(sex == "F" ~ "Female",
-                         sex == "M" ~ "Male"),
-         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
-                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
-         sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
-                                      sample_origin == "UCL" ~ "United Kingdom",
-                                      sample_origin == "LIV" ~ "United Kingdom",
-                                      sample_origin == "ESP" ~ "Spain"),
-         sample_id = gsub('^.', '', sample_id)) %>% 
-  select(.,
-         -sample_origin,
-         -benign_sample_diagnosis)
+```{r, echo=FALSE}
+knitr::include_graphics('./flowchart.png')
 ```
+
 ## Materials and Methods | Data visualisation 
-
-
 <style>
 slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
@@ -57,7 +59,7 @@ p {
   margin-left: 0px;
 } 
 </style>
-```{r, fig.width = 9, fig.height = 6, echo = FALSE}
+```{r, fig.width = 7, fig.height = 5, echo = FALSE}
 
 
 
@@ -81,7 +83,7 @@ malignant_patchwork<- malignant_patchwork + plot_annotation(
         plot.subtitle =  element_text(size=6),
         plot.title = element_text(size=10))
 
-patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
+patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot | biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
 patchwork_diagnosis<- patchwork_diagnosis + plot_annotation(
   title = "K-means results " ,
   caption= "Data from Silvana Debernardi et al" )&

@@ -22,6 +22,8 @@ data_aug_pca_aug_k_means <- data_aug_pca %>%
     clusters_org == 2 ~ "2",
     clusters_org == 3 ~ "3"))
 
+write_tsv(x = data_aug_pca_aug_k_means,
+          file = "PancRISK_project/data/05_k_means_on_whole_data.tsv")
 ## K-means on the PC1 and PC2
 
 k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
@@ -38,6 +40,8 @@ k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
       diagnosis == 1 ~ "benign",
       diagnosis == 2 ~ "malignant"))
 
+write_tsv(x = k_means_onto_PC_1_2,
+          file = "PancRISK_project/data/06_k_means_onto_PC_1_2.tsv")
 ## Model including only plasma_CA19_9 
 
 plasma_CA19_9_alone_k_means <- data_aug_pca %>%
@@ -103,7 +107,6 @@ patchwork + plot_annotation(
   title = "K-means results " ,
   caption= "Data from Silvana Debernardi et al" )& 
   theme(legend.position = 'right')
-
 
 
 
