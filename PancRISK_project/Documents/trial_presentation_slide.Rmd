@@ -56,13 +56,12 @@ p {
   margin-left: 0px;
 } 
 </style>
-```{r, fig.width = 9, fig.height = 6, echo = FALSE}
+```{r, fig.width = 7, fig.height = 5, echo = FALSE}
 
 
 
 patchwork <-  (Data_onto_PCA_plot |  cumulative_variance_plot )
 malignant_patchwork <-  (malignant_onto_PCA_plot |  malignant_cumulative_variance_plot )
-
 
 
 patchwork<-patchwork + plot_annotation(
@@ -81,7 +80,7 @@ malignant_patchwork<- malignant_patchwork + plot_annotation(
         plot.subtitle =  element_text(size=6),
         plot.title = element_text(size=10))
 
-patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
+patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot | biomarkers_only_plot | complete_model_plot)+ plot_layout(guides = 'collect') 
 patchwork_diagnosis<- patchwork_diagnosis + plot_annotation(
   title = "K-means results " ,
   caption= "Data from Silvana Debernardi et al" )&

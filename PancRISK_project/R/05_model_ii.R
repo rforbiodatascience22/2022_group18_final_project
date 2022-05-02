@@ -6,7 +6,6 @@ library("tidyverse")
 
 
 # SVD decomposition of the data
-View(my_data_clean_PCA)
 
 pca_fit <- my_data_clean_PCA  %>%
   select(where(is.numeric)) %>% # retain only numeric columns
@@ -14,8 +13,13 @@ pca_fit <- my_data_clean_PCA  %>%
 
 # Biplot 
 
+
 Data_onto_PCA_plot <- pca_fit %>%
-  augment(my_data_clean) %>% # add original dataset back in
+  augment(my_data_clean_PCA) %>%
+  mutate(diagnosis = case_when(
+    diagnosis ==  0 ~ "control" ,
+    diagnosis == 1 ~ "benign" ,
+    diagnosis == 2~ "malignant" ))%>%
   ggplot(aes(.fittedPC1, .fittedPC2, color = diagnosis)) + 
   geom_point(size = 1.5) +
   scale_color_manual(
@@ -26,7 +30,11 @@ Data_onto_PCA_plot <- pca_fit %>%
         #plot.subtitle =  element_text(size=8),
         plot.title = element_text(size=10))+
   labs( title = "Data projected onto the first two PCs ")
+
+
         #subtitle = "The data points have been colored according to the diagnosis status") 
+
+Data_onto_PCA_plot
 
 
 # Rotation matrix plot
@@ -102,7 +110,7 @@ patchwork + plot_annotation(
 
 malignant_PCA <- my_data_clean_PCA %>% 
   filter(diagnosis==2)%>%
-  select(
+  select(patient_cohort,
          age,
          sex, 
          stage ,
