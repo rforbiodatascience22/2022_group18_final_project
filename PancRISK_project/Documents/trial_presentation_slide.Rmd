@@ -107,25 +107,6 @@ patchwork_PCA/patchwork_diagnosis
 - Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
 - Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
 
-## Materials and Methods | Data modelling {.columns-2}
-<style>
-slides > slide > hgroup + article {
-margin-top: 0px;
-}
-table {
-background-color: #f6f6f6;
-margin-block-end: 20px;
-}
-</style>
-```{r, echo = FALSE}
-#acc_1
-
-#acc_2
-
-#acc_3
-
-#acc_4
-```
 ## Materials and Methods | Data modelling
 <style>
 slides > slide {
