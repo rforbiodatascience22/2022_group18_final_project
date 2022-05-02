@@ -13,8 +13,9 @@ pca_fit <- my_data_clean_PCA  %>%
 
 # Biplot 
 
+
 Data_onto_PCA_plot <- pca_fit %>%
-  augment(my_data_clean) %>% # add original dataset back in
+  augment(my_data_clean_PCA) %>% # add original dataset back in
   ggplot(aes(.fittedPC1, .fittedPC2, color = diagnosis)) + 
   geom_point(size = 1.5) +
   scale_color_manual(

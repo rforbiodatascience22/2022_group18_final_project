@@ -24,6 +24,7 @@ my_data_clean <- my_data %>%
          -sample_origin,
          -benign_sample_diagnosis)
 
+View(my_data_clean)
 # Write data --------------------------------------------------------------
 write_tsv(x = my_data_clean,
           file = "PancRISK_project/data/02_my_data_clean.tsv")
