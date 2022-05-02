@@ -17,7 +17,7 @@ color: #515151;
 
 ## Introduction
 - Data
-  - open source: https://doi.org/10.1371/journal.pmed.1003489
+  - Open-source: https://doi.org/10.1371/journal.pmed.1003489
   
 - Control study: PancRISK
   - Blood biomarker; plasma_CA19_9
@@ -53,6 +53,7 @@ knitr::include_graphics('./flowchart.png')
 - Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
 - Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
 - Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
+
 
 ## Results | Data visualization
 - text
@@ -162,6 +163,23 @@ slides > slide {
  plot_roc(roc7, roc8, 
           title = "PancRISK (Multinomial)",
           caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nMultinom regression contrast Control vs. Benign vs. Malignant"))
+```
+</div>
+
+<style>
+.columns-2 {
+  margin-top: -1px;
+}
+</style>
+
+## Materials and Methods | Data modelling {.columns-2}
+
+<div style = "background-color: #f6f6f6; margin-block-end: 20px;">
+```{r, echo = FALSE}
+acc_1
+acc_2
+acc_3
+acc_4
 ```
 </div>
 
