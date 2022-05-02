@@ -102,7 +102,7 @@ patchwork + plot_annotation(
 
 malignant_PCA <- my_data_clean_PCA %>% 
   filter(diagnosis==2)%>%
-  select(
+  select(patient_cohort,
          age,
          sex, 
          stage ,
