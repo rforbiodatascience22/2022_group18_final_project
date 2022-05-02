@@ -28,6 +28,7 @@ my_data_cleaner <-
          LYVE1 = LYVE1[,1],
          TFF1 = TFF1[,1]) %>%
   mutate(cutoff_plasma = ifelse(plasma_CA19_9 > 37, 1, 0)) %>% 
+  mutate(diagnosis = as.factor(diagnosis)) %>%
   group_by(diagnosis)
 
 write_tsv(x = my_data_cleaner,

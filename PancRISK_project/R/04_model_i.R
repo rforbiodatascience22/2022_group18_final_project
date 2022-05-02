@@ -23,6 +23,7 @@ my_data_plasma <-
 
 my_data_test <-
   my_data_cleaner %>% 
+  mutate(diagnosis = as.factor(diagnosis)) %>%
   setdiff(my_data_train)
 
 pancrisk_model_plasma <- 
@@ -232,31 +233,3 @@ my_data_val_log_1 <- find_cutoff(data = my_data_val_log_1,
 my_data_val_log_2 <- find_cutoff(data = my_data_val_log_2, 
                                  const_1 = 2, 
                                  const_2 = 3)
-
-acc_1 <- 
-  print_acc(data_1 = table(my_data_val_just_plasma_1$pred, my_data_val_just_plasma_1$diagnosis) %>%
-              confusionMatrix(),
-            data_2 = table(my_data_val_just_plasma_2$pred, my_data_val_just_plasma_2$diagnosis) %>%
-              confusionMatrix(),
-            title = "Binary CA19_9")
-
-acc_2 <- 
-  print_acc(data_1 = table(my_data_val_simple_1$pred, my_data_val_simple_1$diagnosis) %>%
-              confusionMatrix(),
-            data_2 = table(my_data_val_simple_2$pred, my_data_val_simple_2$diagnosis) %>%
-              confusionMatrix(),
-            title = "Old panel")
-
-acc_3 <-
-  print_acc(data_1 = table(my_data_val_1$pred, my_data_val_1$diagnosis) %>%
-              confusionMatrix(),
-            data_2 = table(my_data_val_2$pred, my_data_val_2$diagnosis) %>%
-              confusionMatrix(),
-            title = "PancRISK without Plasma")
-
-acc_4 <- 
-  print_acc(data_1 = table(my_data_val_log_1$pred, my_data_val_log_1$diagnosis) %>%
-      confusionMatrix(),
-      data_2 = table(my_data_val_log_2$pred, my_data_val_log_2$diagnosis) %>%
-      confusionMatrix(),
-    title = "PancRISK (Sep. regression)")
