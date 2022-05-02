@@ -36,18 +36,14 @@ write_tsv(x = my_data_cleaner,
 
 
 
+## model_ii augmented data 
 
-
-
-# model_ii augmented data 
-
-# PCA data
-
+## PCA data
 
 my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,stage , plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
   mutate(patient_cohort = case_when(
-    patient_cohort == "Cohort1" ~ 0,
-    patient_cohort == "Cohort2" ~ 1),
+    patient_cohort == "Cohort_1" ~ 0,
+    patient_cohort == "Cohort_2" ~ 1),
     diagnosis = case_when(
       diagnosis == "control" ~ 0,
       diagnosis == "benign" ~ 1,
@@ -64,5 +60,70 @@ my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,s
       stage  == "IV" ~ 4),
     stage = replace_na(stage,0)) %>%
   drop_na(REG1B, LYVE1, TFF1, plasma_CA19_9)
+
+
+## Augmenting the clean data with the data fitted on each PC (will be used in for the K-means )
+
+data_aug_pca <- pca_fit %>% 
+  augment(my_data_clean_PCA)
+
+
+# This model includes all the data features 
+
+## K-means : 
+
+## K-means on the whole data : 
+
+## Full model including plasma_CA19_9 + creatinine + LYVE1 + REG1B + TFF1 
+
+data_aug_pca_aug_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex, plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)%>%
+  mutate(clusters_org = case_when(
+    clusters_org == 1 ~ "1",
+    clusters_org == 2 ~ "2",
+    clusters_org == 3 ~ "3"))
+
+## K-means on the PC1 and PC2
+
+k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
+  select(.fittedPC1, .fittedPC2)  %>%
+  kmeans(centers = 3) %>%
+  augment(data_aug_pca_aug_k_means) %>% 
+  rename(clusters_pca = .cluster)%>%
+  mutate(clusters_pca = case_when(
+    clusters_pca == 1 ~ "1",
+    clusters_pca == 2 ~ "2",
+    clusters_pca == 3 ~ "3"),
+    diagnosis = case_when(
+      diagnosis == 0 ~ "control",
+      diagnosis == 1 ~ "benign",
+      diagnosis == 2 ~ "malignant"))
+
+## Model including only plasma_CA19_9 
+
+plasma_CA19_9_alone_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex,plasma_CA19_9 ) %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)
+
+## Model including only plasma_CA19_9 
+
+biomarkers_only_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex, LYVE1, REG1B, TFF1)  %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)
+
+## Full model including plasma_CA19_9 + creatinine + LYVE1 + REG1B + TFF1 
+
+complete_model_k_means <- data_aug_pca %>%
+  select(patient_cohort,age,sex, LYVE1, REG1B, TFF1,plasma_CA19_9)  %>%
+  kmeans(centers = 3)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster)
 
 
