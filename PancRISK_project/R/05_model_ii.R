@@ -15,7 +15,11 @@ pca_fit <- my_data_clean_PCA  %>%
 
 
 Data_onto_PCA_plot <- pca_fit %>%
-  augment(my_data_clean_PCA) %>% # add original dataset back in
+  augment(my_data_clean_PCA) %>%
+  mutate(diagnosis = case_when(
+    diagnosis ==  0 ~ "control" ,
+    diagnosis == 1 ~ "benign" ,
+    diagnosis == 2~ "malignant" ))%>%
   ggplot(aes(.fittedPC1, .fittedPC2, color = diagnosis)) + 
   geom_point(size = 1.5) +
   scale_color_manual(
@@ -26,7 +30,11 @@ Data_onto_PCA_plot <- pca_fit %>%
         #plot.subtitle =  element_text(size=8),
         plot.title = element_text(size=10))+
   labs( title = "Data projected onto the first two PCs ")
+
+
         #subtitle = "The data points have been colored according to the diagnosis status") 
+
+Data_onto_PCA_plot
 
 
 # Rotation matrix plot

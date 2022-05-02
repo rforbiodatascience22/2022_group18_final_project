@@ -64,7 +64,6 @@ patchwork <-  (Data_onto_PCA_plot |  cumulative_variance_plot )
 malignant_patchwork <-  (malignant_onto_PCA_plot |  malignant_cumulative_variance_plot )
 
 
-
 patchwork<-patchwork + plot_annotation(
   title = "PCA results " ,
   subtitle = "The first two PCs can discriminate between patients suffering from PC from the control and benign diagnosed ones  ",

@@ -46,9 +46,9 @@ my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,s
     patient_cohort == "Cohort_1" ~ 0,
     patient_cohort == "Cohort_2" ~ 1),
     diagnosis = case_when(
-      diagnosis == "control" ~ 0,
-      diagnosis == "benign" ~ 1,
-      diagnosis == "malignant" ~ 2),
+    diagnosis == "control" ~ 0,
+    diagnosis == "benign" ~ 1,
+    diagnosis == "malignant" ~ 2),
     sex = case_when(
       sex == "Male" ~ 0,
       sex == "Female" ~ 1),
@@ -61,5 +61,6 @@ my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,s
       stage  == "IV" ~ 4),
     stage = replace_na(stage,0)) %>%
   drop_na(REG1B, LYVE1, TFF1, plasma_CA19_9)
+
 
 
