@@ -13,38 +13,40 @@ slides > slide {
 color: #515151;
 }
 </style>
-## Materials and Methods | Introduction
-- background of the dataset 
-  - where does the dataset come from 
-  - aim of the investigation
 
-## Materials and Methods | Data cleansing: from csv to tsv, assigned NA as '' or 'NA'
-<style> 
-pre {font-size: 15px;}
+## Introduction
+- Data
+  - open source: https://doi.org/10.1371/journal.pmed.1003489
+  
+- Control study: PancRISK
+  - Blood biomarker; plasma_CA19_9
+  - Normalization; creatinine
+  - Urinary biomarkers; REG1A, REG1B, LYVE1, TFF1
+  - Diagnosis; control, benign, malignant
+
+- Aim
+  - Visual exploration
+  - Urinary biomarker performance
+  - Evaluation of diagnosis prediction
+
+## Materials and Methods | Flow chart
+<style>
+slides > slide {
+  background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
+  background-color: white;
+  }
+  
+img { 
+  margin-top: -90px; 
+  margin-left: 300px;
+  width: 70%;
+} 
 </style>
-```{r, eval=FALSE}
-my_data_clean <- my_data %>% 
-  as_tibble %>% 
-  bind_cols %>% 
-  mutate(diagnosis = case_when(diagnosis == 1 ~ "control",
-                               diagnosis == 2 ~ "benign",
-                               diagnosis == 3 ~ "malignant"),
-         sex = case_when(sex == "F" ~ "Female",
-                         sex == "M" ~ "Male"),
-         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
-                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
-         sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
-                                      sample_origin == "UCL" ~ "United Kingdom",
-                                      sample_origin == "LIV" ~ "United Kingdom",
-                                      sample_origin == "ESP" ~ "Spain"),
-         sample_id = gsub('^.', '', sample_id)) %>% 
-  select(.,
-         -sample_origin,
-         -benign_sample_diagnosis)
+```{r, echo=FALSE}
+knitr::include_graphics('./flowchart.png')
 ```
+
 ## Materials and Methods | Data visualisation 
-
-
 <style>
 slides > slide {
   background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
