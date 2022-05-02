@@ -23,6 +23,7 @@ my_data_plasma <-
 
 my_data_test <-
   my_data_cleaner %>% 
+  mutate(diagnosis = as.factor(diagnosis)) %>%
   setdiff(my_data_train)
 
 pancrisk_model_plasma <- 
