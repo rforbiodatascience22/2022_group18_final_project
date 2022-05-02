@@ -1,8 +1,9 @@
 ---
 title: "22100 - R for Bio Data Science"
-subtitle : "GROUP 18  FINAL PROJECT "
+subtitle : "Final project"
 author: "Group 18"
-date: '2022-05-10'
+
+date: '2022-05-09'
 output: 
   ioslides_presentation:
     widescreen: true
@@ -13,36 +14,40 @@ slides > slide {
 color: #515151;
 }
 </style>
-## Materials and Methods | Introduction
-- background of the dataset 
-  - where does the dataset come from 
-  - aim of the investigation
 
-## Materials and Methods | Data cleansing: from csv to tsv, assigned NA as '' or 'NA'
-<style> 
-pre {font-size: 15px;}
+## Introduction
+- Data
+  - open source: https://doi.org/10.1371/journal.pmed.1003489
+  
+- Control study: PancRISK
+  - Blood biomarker; plasma_CA19_9
+  - Normalization; creatinine
+  - Urinary biomarkers; REG1A, REG1B, LYVE1, TFF1
+  - Diagnosis; control, benign, malignant
+
+- Aim
+  - Visual exploration
+  - Urinary biomarker performance
+  - Evaluation of diagnosis prediction
+
+## Materials and Methods | Flow chart
+<style>
+slides > slide {
+  background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
+  background-color: white;
+  }
+  
+img { 
+  margin-top: -90px; 
+  margin-left: 300px;
+  width: 70%;
+} 
 </style>
-```{r, eval=FALSE}
-my_data_clean <- my_data %>% 
-  as_tibble %>% 
-  bind_cols %>% 
-  mutate(diagnosis = case_when(diagnosis == 1 ~ "control",
-                               diagnosis == 2 ~ "benign",
-                               diagnosis == 3 ~ "malignant"),
-         sex = case_when(sex == "F" ~ "Female",
-                         sex == "M" ~ "Male"),
-         patient_cohort = case_when(patient_cohort == "Cohort1" ~ "Cohort_1",
-                                    patient_cohort == "Cohort2" ~ "Cohort_2"),
-         sampling_country = case_when(sample_origin == "BPTB" ~ "United Kingdom",
-                                      sample_origin == "UCL" ~ "United Kingdom",
-                                      sample_origin == "LIV" ~ "United Kingdom",
-                                      sample_origin == "ESP" ~ "Spain"),
-         sample_id = gsub('^.', '', sample_id)) %>% 
-  select(.,
-         -sample_origin,
-         -benign_sample_diagnosis)
+```{r, echo=FALSE}
+knitr::include_graphics('./flowchart.png')
 ```
 ## Modelling 
+=======
 
 <style>
 slides > slide {
@@ -92,9 +97,6 @@ malignant_patchwork<- malignant_patchwork + plot_annotation(
         plot.title = element_text(size=8))
 
 
-
-
-
 patchwork_diagnosis_1 <-  (pl1|plasma_CA19_9_alone_plot) +
   #plot_layout(guides = 'collect')+ 
   plot_annotation(
@@ -106,8 +108,6 @@ patchwork_diagnosis_2 <-(biomarkers_only_plot|complete_model_plot)+
   plot_annotation(
   caption= "Data from Silvana Debernardi et al" )&
   theme(legend.position = "bottom")
-
-
 
 
 top_patchwork <-  wrap_plots(A=patchwork ,
@@ -123,31 +123,13 @@ bottom_patchwork <-  wrap_plots(A=malignant_patchwork ,
 top_patchwork/bottom_patchwork 
 
 
-#layout <- '
-#A#B
-#C#D
-#'
-
-#wrap_plots(A=patchwork ,
-           #B=patchwork_diagnosis_1 ,
-           #C=malignant_patchwork,
-           #D = patchwork_diagnosis_2, 
-           #design = layout)
-
-
-#patchwork_PCA<- (patchwork / malignant_patchwork)
-
-
-#patchwork_PCA|patchwork_diagnosis
-
-
 ```
 
 
 ## Materials and Methods | Data modelling
 
 - 1:1 Training- and validation-set split
-- Sepereate/Multinomial logistic regression
+- Seperate/Multinomial logistic regression (glm)
 <br/><br/>
 - Candidate 1: binary plasma CA19_9 (cutoff 37 U/ml)
 - Cand. 2 (Old panel): REG1A, LYVE1, TFF1; corrected for age and creatinine
@@ -162,8 +144,8 @@ slides > slide {
   }
   
 p { 
-  margin-top: 0px; 
-  margin-left: 0px;
+  margin-top: -40px; 
+  margin-left: -40px;
 } 
 </style>
 ```{r, fig.width = 12, fig.height = 5.2, echo = FALSE}
