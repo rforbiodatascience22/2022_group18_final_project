@@ -185,7 +185,7 @@ malignant_k_means_onto_PC_1_2 <- malignant_aug_pca_aug_k_means %>%
 
 
 #The real clusters plot into the  PC1 and PC2 space
-pl1 <- malignant_k_means_onto_PC_1_2 %>%
+pl1_malignant<- malignant_k_means_onto_PC_1_2 %>%
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = stage)) +
   geom_point() +
   labs( title = "The true clusters ploted into the PC1 and PC2 space ") +
@@ -196,7 +196,7 @@ pl1 <- malignant_k_means_onto_PC_1_2 %>%
 
 #The  clusters predicted by the K means on the whole data plot into PC1 and PC2 space
 
-pl2 <- malignant_aug_pca_aug_k_means %>%
+pl2_malignant <- malignant_aug_pca_aug_k_means %>%
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
   geom_point() +
   labs( subtitle = "The clusters predicted by K-means performed on the original data plotted into the PC1 and PC2 space ") +
@@ -208,7 +208,7 @@ pl2 <- malignant_aug_pca_aug_k_means %>%
 
 #The  clusters predicted by the K means on the data fitted into PC1 and PC2  plotted  into PC1 and PC2 space
 
-pl3 <- malignant_k_means_onto_PC_1_2 %>%
+pl3_malignant <- malignant_k_means_onto_PC_1_2 %>%
   ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_pca)) +
   geom_point() +
   labs( subtitle = "The clusters predicted by K-means performed on the data fitted onto PC1 and PC2 plotted into the PC1 and PC2 space ")+
@@ -218,7 +218,7 @@ pl3 <- malignant_k_means_onto_PC_1_2 %>%
   theme_minimal(8)
 
 
-patchwork <-  (pl1 /pl2 / pl3) 
+patchwork <-  (pl1_malignant /pl2_malignant / pl3_malignant) 
 patchwork + plot_annotation(
   title = "K-means results " ,
   caption= "Data from Silvana Debernardi et al" )& 
