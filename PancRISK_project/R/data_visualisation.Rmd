@@ -73,16 +73,25 @@ ggplot(data = clean_data,
 
 # Age Distribution 
 ```{r}
-#clean_data %>%
-#  count(age) %>%
-#  ggplot(aes(x = age, y = n)) +
-#  geom_col()
-
-
-clean_data %>%
-  ggplot(aes(x = age)) +
-  geom_bar()
+age_distribution <- clean_data %>% 
+  ggplot(aes(x = age, 
+             fill = diagnosis)) +
+  geom_bar() + 
+  theme_minimal() + 
+  labs(title = "Age Distribution Across Different Diagnosis Groups", 
+       x = "Age", 
+       y = "Count")
 ```
+
+```{r}
+  
+
+```
+
+
+
+
+
 
 # Sex Distribution 
 ```{r}
@@ -99,24 +108,152 @@ clean_data %>%
   theme_void() # remove background, grid, numeric labels
 ```
 
-# Diagnosis
+
+# Demographics and clinical characteristics of patients and control individuals.
+```{r}
+
+```
+
+# Age & Sex distribution 
+```{r}
+
+age_distribution <- clean_data %>% 
+  ggplot(aes(x = age, 
+             color = diagnosis)) +
+  geom_density() + 
+  theme_minimal(base_size = 10) + 
+  labs(title = "Age Distribution Across Different Diagnosis Groups", 
+       x = "Age", 
+       y = "Density", 
+       color = "Diagnosis Group") + 
+  scale_color_discrete(labels = c("Begnin", "Control", "Malignant"))
+
+
+sex_distribution <- ggplot(data = clean_data, 
+                           mapping = aes(x = diagnosis, 
+                     fill = sex)) + 
+  geom_bar(stat="count", 
+           position = position_dodge()) + 
+  geom_text(stat = "count", 
+            aes(label= ..count..), 
+            position = position_dodge(1), 
+            vjust = -0.3, 
+            size = 2) + 
+  theme_minimal(base_size = 10) + 
+  theme(legend.position = "right") + 
+  labs(title = "Sex Distribution Across Different Diagnosis Groups", 
+       x = "Diagnosis Group", 
+       y = "Count", 
+       fill = "Sex") + 
+  scale_x_discrete(labels = c("Benign", "Control", "PDAC"))
+
+
+clinical_plot <- (age_distribution / sex_distribution)
+clinical_plot
+```
+
+
+# Pie chart 
 ```{r}
 clean_data %>% 
   count(diagnosis) %>% 
+  mutate(percentage = round(n/sum(n)*100), 3) %>% 
   ggplot(aes(x = "", 
-             y = n, 
+             y = percentage, 
              fill = diagnosis)) +
-  geom_bar(stat="identity", width=1, color="white") +
-  coord_polar("y", start=0) +
-  geom_text(aes(label = n),
-            position = position_stack(vjust = 0.5)) + 
+  geom_bar(stat = "identity", 
+           width = 1, 
+           color = "white") +
+  coord_polar("y", 
+              start = 0) +
+  geom_text(aes(label = paste0(percentage, "%")),
+            position = position_stack(vjust = 0.5), 
+            size = 4) + 
   
-  theme_void() # remove background, grid, numeric labels
+  theme_void(base_size = 8) +  # remove background, grid, numeric labels  
+  labs(title = "Diagnosis Group Distribution", 
+       fill = "Diagnosis Group") + 
+  scale_fill_discrete(labels = c("Benign", "Control", "PDAC"))
+
 ```
+
+
+
+
+
+
+# Stage Distribution 
+
+
+```{r}
+
+diagnosis_percentage <- clean_data %>%
+  count(diagnosis) %>% 
+  mutate(Diagnosis = "Diagnosis Group", 
+         percentage = round(n/sum(n)*100), digits = 2) %>% 
+  ggplot(mapping = aes(fill = diagnosis, 
+                       x = n, 
+                       y = Diagnosis)) + 
+  geom_col() + 
+  scale_fill_brewer(palette = "Pastel2", 
+                    labels = c("Begnin", "Control", "Malignant")) + 
+  geom_text(aes(label = paste0(percentage, "%")),
+            position = position_stack(vjust = 0.5), 
+            size = 4) +
+  theme_minimal(base_size = 10) + 
+  labs(x = NULL, 
+       y = NULL, 
+       title = "Diagnosis Group Distribution", 
+       fill = "Diagnosis Group") + 
+  theme(legend.key.height = unit(0.01, 'cm'), 
+        legend.position = "right") 
+  #scale_fill_discrete(labels = c("Begnin", "Control", "Malignant"))
+
+
+# Stacked + percent
+stage_precentage <- clean_data %>% 
+  filter(!is.na(stage)) %>% 
+  count(stage) %>% 
+  mutate(Stage = "Stage", 
+         proportion = round(n/sum(n)*100), digits = 2) %>% 
+  ggplot(mapping = aes(fill = stage, 
+                       x = n, 
+                       y = Stage)) + 
+  geom_col() + 
+  scale_fill_brewer(palette = "Set2") + 
+  geom_text(aes(label = paste0(proportion, "%")),
+            position = position_stack(vjust = 0.5), 
+            size = 3) +
+  theme_minimal(base_size = 10) + 
+  labs(x = "Number of Patients", 
+       y = NULL, 
+       title = "Malignant Patients Stages Distribution", 
+       fill = "Stage") + 
+  theme(legend.key.height = unit(0.01, 'cm'), 
+        legend.position = "right")
+  
+diagnosis_stage_distribution <- (diagnosis_percentage / stage_precentage) + 
+  plot_layout(heights = unit(c(3, 3), c('cm', 'cm')))
+
+diagnosis_stage_distribution
+```
+
+```{r}
+all_distribution <- (age_distribution / sex_distribution / diagnosis_percentage / stage_precentage) + 
+  plot_layout(heights = unit(c(0.2, 0.1, 0.03, 0.03), c('npc', 'npc', 'npc', 'npc')))
+
+all_distribution
+```
+
+
+
+
+
+
 
 # Sample distribution between cohorts regarding protein samples taken
 ```{r}
-data_long <- my_data_clean %>% 
+data_long <- clean_data %>% 
   select(patient_cohort, 
          plasma_CA19_9, 
          creatinine, 
