@@ -172,7 +172,7 @@ slides > slide {
 }
 </style>
 
-## Materials and Methods | Data modelling {.columns-2}
+## Results | Data modelling {.columns-2}
 
 <div style = "background-color: #f6f6f6; margin-block-end: 20px;">
 ```{r, echo = FALSE}
