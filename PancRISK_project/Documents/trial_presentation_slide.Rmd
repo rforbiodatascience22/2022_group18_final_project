@@ -185,6 +185,12 @@ acc_4
 
 ## Discussion
 
-- What we see from the model Is there any difference between our model and the model from the paper? 
-- Limitation of our model 
-- Any further improvements?
+- Blood vs Urinary biomarkers in classification
+  1) Blood plasma shows importance in classification of diagnosis
+  2) K-means with or without PCA performs poorly in classification
+
+- Possible explanation:
+  1) dataset contains a complex frame of attributes
+  2) Patients with malignant diagnosis should be subdivided into stages
+  to improve the classification performance.
+  3) Other biomarkers could provide better performance
