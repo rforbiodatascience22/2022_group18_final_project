@@ -379,8 +379,8 @@ TFF1vscreatinine_plot <-ggplot(data = TFF1vscreatinine,
 
 
 ```{r}
-patchwork <- (LYVEvscreatinine_plot |REG1Bvscreatinine_plot |TFF1vscreatinine_plot )
-patchwork + plot_annotation(
+violin_plot <- (LYVEvscreatinine_plot |REG1Bvscreatinine_plot |TFF1vscreatinine_plot )
+violin + plot_annotation(
               title = "The levels of the 3 biomarkers in control, benign, and pancreatic ductal adenocarcinoma (PDAC) samples. " ,
               subtitle = "Violin plots are shown for each protein. All data were creatinine normalised ",
               caption= "Data from Silvana Debernardi et al" )& 

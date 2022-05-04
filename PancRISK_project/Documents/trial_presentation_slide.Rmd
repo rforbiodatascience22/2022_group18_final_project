@@ -44,6 +44,32 @@ knitr::include_graphics('./flowchart.png')
 ```
 </div>
 
+## Test image (remove this slide if you don't like it) | Flow Chart {.fullslide}
+<style>
+.fullslide img {
+  margin-top: -50px;
+  margin-left: 0px;
+}
+</style>
+![Flow Chart 500px](flowchart.png){height=600px, width=700px}
+
+
+## Materials and Methods | Data Visualization 
+```{r, echo = FALSE}
+all_distribution
+```
+
+
+## Materials and Methods | Data Visualization 
+```{r, echo=FALSE}
+violin_plot + plot_annotation(
+  title = "The levels of the 3 biomarkers in control, benign, and pancreatic ductal adenocarcinoma (PDAC) samples. " ,
+  subtitle = "Violin plots are shown for each protein. All data were creatinine normalised ",
+  caption= "Data from Silvana Debernardi et al" ) +  
+  theme(legend.position = 'none')
+```
+
+
 ## Materials and Methods | Data modelling
 
 - 1:1 Training- and validation-set split
@@ -54,9 +80,6 @@ knitr::include_graphics('./flowchart.png')
 - Cand. 3 (without plasma): REG1B, LYVE1, TFF1; corrected for age and creatinine
 - Cand. 4 (PancRISK): REG1B, LYVE1, TFF1 and binary plasma CA19_9; corrected for age and creatinine
 
-
-## Results | Data visualization
-- text
 
 ## Results | PCA & K-means
 <style>
