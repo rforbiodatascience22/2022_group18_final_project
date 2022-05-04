@@ -38,21 +38,11 @@ slides > slide {
   }
 </style>
 
-<div style = "margin-top: -170px; margin-left: 250px; scale: 80%;">
+<div style = "margin-top: -170px; margin-left: 100px; scale: 80%;">
 ```{r img-with-knitr, echo=FALSE, fig.align='center', out.extra='class="myimg"'}
 knitr::include_graphics('./flowchart.png')
 ```
 </div>
-
-## Test image (remove this slide if you don't like it) | Flow Chart {.fullslide}
-<style>
-.fullslide img {
-  margin-top: -50px;
-  margin-left: 0px;
-}
-</style>
-![Flow Chart 500px](flowchart.png){height=600px, width=700px}
-
 
 ## Materials and Methods | Data Visualization 
 <div style = "margin-top: -50px">
@@ -200,7 +190,7 @@ slides > slide {
 
 ## Results | Data modelling {.columns-2}
 
-<div style = "background-color: #f6f6f6; margin-block-end: 20px;">
+<div style = "background-color: #f6f6f6">
 ```{r, echo = FALSE}
 acc_1
 acc_2
