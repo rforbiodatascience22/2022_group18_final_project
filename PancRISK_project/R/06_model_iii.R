@@ -4,6 +4,7 @@ data_aug_pca <- pca_fit %>%
   augment(my_data_clean_PCA)
 
 
+
 # This model includes all the data features 
 
 ## K-means : 
@@ -152,6 +153,121 @@ patchwork_diagnosis + plot_annotation(
 
 
 
+
+#--------------------
+
+# Here i'm testing how the 3 biomarkers can allow a better distinction between the malignant samples and the benign ones 
+data_aug_pca <- pca_fit %>% 
+  augment(my_data_clean_PCA)%>%
+  filter(diagnosis != 0)
+
+k_means_PC_1_2 <- data_aug_pca %>%
+  select(.fittedPC1, .fittedPC2)  %>%
+  kmeans(centers = 2) %>%
+  augment(data_aug_pca) %>%
+  rename(clusters_pca = .cluster)%>%
+  mutate(clusters_pca = case_when(
+    clusters_pca == 1 ~ "1",
+    clusters_pca == 2 ~ "2"),
+    diagnosis = case_when(
+      diagnosis == 1 ~ "benign",
+      diagnosis == 2 ~ "malignant"))
+
+
+
+
+plasma_CA19_9_alone <- k_means_PC_1_2 %>%
+  select(diagnosis ,patient_cohort,age,sex,plasma_CA19_9 ) %>%
+  filter(diagnosis != 0)%>%
+  select(-diagnosis)%>%
+  kmeans(centers = 2)%>%
+  augment(k_means_PC_1_2) %>% 
+  rename(clusters = .cluster)
+
+plasma_CA19_9_plot <- plasma_CA19_9_alone %>%
+  ggplot() +
+  geom_point(aes(x = .fittedPC1, y = .fittedPC2, shape = clusters , size = 3)) +
+  geom_point(aes(x = .fittedPC1, y = .fittedPC2, color= diagnosis , size = 3 , alpha= 1/1000)) +
+  labs( title = " plasma_CA19_9 ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+plasma_CA19_9_plot
+
+## Model including only LYVE1, REG1B, TFF1 biomarkers
+
+biomarkers_only <- data_aug_pca %>%
+  select(diagnosis , patient_cohort,age,sex, LYVE1, REG1B, TFF1)  %>%
+  filter(diagnosis != 0)%>%
+  select(-diagnosis)%>%
+  kmeans(centers = 2)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters= .cluster)
+
+## Full model including plasma_CA19_9 + creatinine + LYVE1 + REG1B + TFF1 
+
+complete_model <- data_aug_pca %>%
+  select(diagnosis , patient_cohort,age,sex, LYVE1, REG1B, TFF1,plasma_CA19_9)  %>%
+  filter(diagnosis != 0)%>%
+  select(-diagnosis)%>%
+  kmeans(centers = 2)%>%
+  augment(data_aug_pca) %>% 
+  rename(clusters = .cluster)
+
+
+plasma_CA19_9_plot <- plasma_CA19_9_alone %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters)) +
+  geom_point() +
+  labs( title = " plasma_CA19_9 ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+biomarkers_plot <- biomarkers_only %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters)) +
+  geom_point() +
+  labs( title = "LYVE1+REG1B+TFF1") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+complete_modelplot <- complete_model %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters)) +
+  geom_point() +
+  labs( title = "LYVE1+REG1B+TFF1+plasma_CA19_9") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "none",
+        plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+
+pl1 <- k_means_PC_1_2 %>%
+  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = diagnosis)) +
+  geom_point() +
+  labs( title = "The true clusters ") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(legend.position = "bottom",
+        plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+
+patchwork_diag <-  (pl1|plasma_CA19_9_plot |biomarkers_plot | complete_modelplot)+ 
+  plot_layout(guides = 'collect') 
+patchwork_diag + plot_annotation(
+  title = "K-means results " ,
+  caption= "Data from Silvana Debernardi et al" )&
+  theme(legend.position = "bottom")
+
+#--------------------
 
 #K-means to distinguish the 4 stages of malignant patients
 
