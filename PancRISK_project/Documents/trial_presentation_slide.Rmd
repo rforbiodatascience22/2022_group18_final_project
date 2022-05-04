@@ -55,13 +55,14 @@ knitr::include_graphics('./flowchart.png')
 
 
 ## Materials and Methods | Data Visualization 
-```{r, echo = FALSE}
+<div style = "margin-top: -50px">
+```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
 all_distribution
 ```
-
+</div>
 
 ## Materials and Methods | Data Visualization 
-```{r, echo=FALSE}
+```{r, echo=FALSE, fig.width = 9.5}
 violin_plot + plot_annotation(
   title = "The levels of the 3 biomarkers in control, benign, and pancreatic ductal adenocarcinoma (PDAC) samples. " ,
   subtitle = "Violin plots are shown for each protein. All data were creatinine normalised ",

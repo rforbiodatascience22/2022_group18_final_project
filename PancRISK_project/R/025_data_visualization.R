@@ -2,102 +2,102 @@ library("tidyverse")
 library("patchwork")
 library("ggridges")
 
-
 # Loading of data 
-clean_data <- read.csv("../data/02_my_data_clean.tsv", sep = "\t")
-
-
-
+clean_data <- read.csv("PancRISK_project/data/02_my_data_clean.tsv", sep = "\t")
 
 # Age & Sex distribution 
 
-age_distribution <- clean_data %>% 
+age_distribution <- 
+  clean_data %>% 
   ggplot(aes(x = age, 
-             color = diagnosis)) +
-  geom_density() + 
+             color = fct_rev(diagnosis),
+             fill = fct_rev(diagnosis))) +
+  geom_density(alpha = 0.2) + 
   theme_minimal(base_size = 10) + 
   labs(title = "Age Distribution Across Different Diagnosis Groups", 
        x = "Age", 
        y = "Density", 
-       color = "Diagnosis Group") + 
-  scale_color_discrete(labels = c("Begnin", "Control", "Malignant"))
+       color = "Diagnosis",
+       fill = ""
+  ) + 
+  guides(fill = FALSE) +
+  scale_color_brewer(palette = "Pastel2",
+                     guide = guide_legend(reverse = TRUE),
+                     labels = c("Malignant", "Control", "Benign")) +
+  scale_fill_brewer(palette = "Pastel2",
+                    guide = guide_legend(reverse = TRUE),
+                    labels = c("Malignant", "Control", "Benign"))
 
-
-sex_distribution <- ggplot(data = clean_data, 
-                           mapping = aes(x = diagnosis, 
-                                         fill = sex)) + 
+sex_distribution <- 
+  clean_data %>%
+  ggplot(mapping = aes(x = diagnosis, 
+                       fill = sex)) + 
   geom_bar(stat="count", 
            position = position_dodge()) + 
   geom_text(stat = "count", 
             aes(label= ..count..), 
             position = position_dodge(1), 
             vjust = -0.3, 
-            size = 2) + 
+            size = 3) + 
+  ylim(0, 140) +
   theme_minimal(base_size = 10) + 
   theme(legend.position = "right") + 
   labs(title = "Sex Distribution Across Different Diagnosis Groups", 
        x = "Diagnosis Group", 
        y = "Count", 
        fill = "Sex") + 
-  scale_x_discrete(labels = c("Benign", "Control", "PDAC"))
-
-
+  scale_x_discrete(labels = c("Benign", "Control", "Malignant"))
 
 # Stage Distribution 
 
-diagnosis_percentage <- clean_data %>%
+diagnosis_percentage <- 
+  clean_data %>%
   count(diagnosis) %>% 
-  mutate(Diagnosis = "Diagnosis Group", 
+  mutate(Diagnosis = "", 
          percentage = round(n/sum(n)*100), digits = 2) %>% 
-  ggplot(mapping = aes(fill = diagnosis, 
+  ggplot(mapping = aes(fill = fct_rev(diagnosis), 
                        x = n, 
                        y = Diagnosis)) + 
   geom_col() + 
-  scale_fill_brewer(palette = "Pastel2", 
-                    labels = c("Begnin", "Control", "Malignant")) + 
-  geom_text(aes(label = paste0(percentage, "%")),
+  scale_fill_discrete(labels = c("Benign", "Control", "Malignant")) +
+  scale_fill_brewer(palette = "Pastel2") +
+  geom_text(aes(label = paste0(percentage, "%", " - ", str_to_sentence(diagnosis))),
             position = position_stack(vjust = 0.5), 
-            size = 4) +
+            size = 3) +
   theme_minimal(base_size = 10) + 
-  labs(x = NULL, 
-       y = NULL, 
+  labs(x = "", 
+       y = "", 
        title = "Diagnosis Group Distribution", 
-       fill = "Diagnosis Group") + 
-  theme(legend.key.height = unit(0.01, 'cm'), 
-        legend.position = "right") 
-#scale_fill_discrete(labels = c("Begnin", "Control", "Malignant"))
-
+       fill = "") + 
+  theme(legend.position = "none")
 
 # Stacked + percent
-stage_precentage <- clean_data %>% 
+stage_precentage <- 
+  clean_data %>% 
   filter(!is.na(stage)) %>% 
   count(stage) %>% 
-  mutate(Stage = "Stage", 
+  mutate(Stage = "", 
          proportion = round(n/sum(n)*100), digits = 2) %>% 
   ggplot(mapping = aes(fill = stage, 
                        x = n, 
                        y = Stage)) + 
-  geom_col() + 
-  scale_fill_brewer(palette = "Set2") + 
-  geom_text(aes(label = paste0(proportion, "%")),
-            position = position_stack(vjust = 0.5), 
-            size = 3) +
+  geom_col(position = position_stack(reverse = TRUE)) + 
+  scale_fill_brewer(palette = "Pastel2") + 
+  geom_text(aes(label = ifelse(proportion >= 4, paste0(proportion, "%"), "")),
+            position = position_stack(vjust = 0.5,
+                                      reverse = TRUE), 
+                                      size = 3) +
   theme_minimal(base_size = 10) + 
   labs(x = "Number of Patients", 
-       y = NULL, 
+       y = "Stage", 
        title = "Malignant Patients Stages Distribution", 
        fill = "Stage") + 
-  theme(legend.key.height = unit(0.01, 'cm'), 
-        legend.position = "right")
+  theme(legend.key.height = unit(0.001, 'cm'), 
+        legend.position = "right") +
+  guides(fill = guide_legend(ncol = 2))
 
-
-
-all_distribution <- (age_distribution / sex_distribution / diagnosis_percentage / stage_precentage) + 
-  plot_layout(heights = unit(c(0.2, 0.1, 0.03, 0.03), c('npc', 'npc', 'npc', 'npc')))
-
-all_distribution
-
-
+all_distribution <- (age_distribution / sex_distribution / plot_spacer() / diagnosis_percentage / plot_spacer() / stage_precentage) + 
+  plot_layout(heights = unit(c(0.15, 0.15, 0.02, 0.03, 0.005, 0.03), c('npc', 'npc', 'npc', 'npc')))
 
 #==================================================================================
 
@@ -115,24 +115,24 @@ data_long <- clean_data %>%
                names_to = "protein", 
                values_to = "expression")
 
-data_long %>%
-  group_by(patient_cohort) %>%
-  ggplot(mapping = aes(y = patient_cohort, 
-                       fill = patient_cohort)) +
-  facet_wrap(~protein, 
-             ncol = 2, 
-             scales = "free") +
-  geom_bar() +
-  xlab("Occurence of measured protein levels per Cohort ") +
-  ylab("Cohort of patients") +
-  labs(title = "Sample distribution between two cohorts of patients") +
-  theme_minimal() +
-  theme(legend.position="none")
-
+# data_long %>%
+#   group_by(patient_cohort) %>%
+#   ggplot(mapping = aes(y = patient_cohort, 
+#                        fill = patient_cohort)) +
+#   facet_wrap(~protein, 
+#              ncol = 2, 
+#              scales = "free") +
+#   geom_bar() +
+#   xlab("Occurence of measured protein levels per Cohort ") +
+#   ylab("Cohort of patients") +
+#   labs(title = "Sample distribution between two cohorts of patients") +
+#   theme_minimal() +
+#   theme(legend.position="none")
 
 #  Levels of the 3 biomarkers in control, benign, and  (PDAC) samples
 
-LYVEvscreatinine <- select(clean_data, diagnosis , stage , LYVE1, creatinine) %>%
+LYVEvscreatinine <- 
+  select(clean_data, diagnosis , stage , LYVE1, creatinine) %>%
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",
     diagnosis == "benign" ~ "benign",
@@ -142,23 +142,25 @@ LYVEvscreatinine <- select(clean_data, diagnosis , stage , LYVE1, creatinine) %>
     stage  == "IIB" ~ "PDAC I-II",
     stage  == "III" ~ "PDAC III-IV",
     stage  == "IV" ~ "PDAC III-IV") , 
-    LYVE1 = LYVE1 / creatinine  )
+    LYVE1 = LYVE1 / creatinine)
 
-
-LYVEvscreatinine_plot <-ggplot(data = LYVEvscreatinine, 
-                               mapping = aes(x = diagnosis, 
-                                             y = LYVE1, 
-                                             color = diagnosis)) + 
-  geom_violin(trim=FALSE)+ 
-  geom_boxplot(width=0.2)+
-  labs(y = "LYVE1 ng/mg creatinine" , 
+LYVEvscreatinine_plot <-
+  ggplot(data = LYVEvscreatinine, 
+         mapping = aes(x = diagnosis, 
+                       y = LYVE1, 
+                       color = diagnosis)) + 
+  geom_violin(trim = FALSE)+ 
+  geom_boxplot(width = 0.2)+
+  labs(x = "",
+       y = "LYVE1 ng/mg creatinine" , 
        title = "LYVE1") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45))
 
-
-REG1Bvscreatinine <- select(clean_data, diagnosis , stage , REG1B, creatinine) %>%
+REG1Bvscreatinine <- 
+  select(clean_data, diagnosis , stage , REG1B, creatinine) %>%
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",
     diagnosis == "benign" ~ "benign",
@@ -170,23 +172,23 @@ REG1Bvscreatinine <- select(clean_data, diagnosis , stage , REG1B, creatinine) %
     stage  == "IV" ~ "PDAC III-IV"), 
     REG1B = REG1B/ creatinine)
 
-
-REG1Bvscreatinine_plot <- ggplot(data = REG1Bvscreatinine, 
-                                 mapping = aes(x = diagnosis, 
-                                               y = REG1B, 
-                                               color = diagnosis)) + 
-  geom_violin(trim=FALSE)+ 
-  geom_boxplot(width=0.2)+
-  labs(y = "REG1B ng/mg creatinine" , 
+REG1Bvscreatinine_plot <- 
+  ggplot(data = REG1Bvscreatinine, 
+         mapping = aes(x = diagnosis, 
+                       y = REG1B, 
+                       color = diagnosis)) + 
+  geom_violin(trim = FALSE) + 
+  geom_boxplot(width = 0.2) +
+  labs(x = "Diagnosis",
+       y = "REG1B ng/mg creatinine" , 
        title = "REG1B") +
   theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "none")
+                base_family = "Avenir") +
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45))
 
-
-
-
-TFF1vscreatinine <- select(clean_data, diagnosis , stage , TFF1, creatinine) %>%
+TFF1vscreatinine <- 
+  select(clean_data, diagnosis , stage , TFF1, creatinine) %>%
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",
     diagnosis == "benign" ~ "benign",
@@ -198,31 +200,19 @@ TFF1vscreatinine <- select(clean_data, diagnosis , stage , TFF1, creatinine) %>%
     stage  == "IV" ~ "PDAC III-IV"),
     TFF1 = TFF1/ creatinine)
 
-
-
-
-
-TFF1vscreatinine_plot <-ggplot(data = TFF1vscreatinine, 
-                               mapping = aes(x = diagnosis, 
-                                             y = TFF1, 
-                                             color = diagnosis)) + 
-  geom_violin(trim=FALSE)+ 
-  geom_boxplot(width=0.2)+
-  labs(y = "TFF1 ng/mg creatinine" , 
+TFF1vscreatinine_plot <-
+  ggplot(data = TFF1vscreatinine, 
+        mapping = aes(x = diagnosis, 
+                      y = TFF1, 
+                      color = diagnosis)) + 
+  geom_violin(trim = FALSE)+ 
+  geom_boxplot(width = 0.2)+
+  labs(x = "",
+       y = "TFF1 ng/mg creatinine" , 
        title = "TFF1") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
-  theme(legend.position = "none")
+  theme(legend.position = "none",
+        axis.text.x = element_text(angle = 45))
 
-
-
-
-
-violin_plot <- (LYVEvscreatinine_plot |REG1Bvscreatinine_plot |TFF1vscreatinine_plot )
-violin_plot + plot_annotation(
-  title = "The levels of the 3 biomarkers in control, benign, and pancreatic ductal adenocarcinoma (PDAC) samples. " ,
-  subtitle = "Violin plots are shown for each protein. All data were creatinine normalised ",
-  caption= "Data from Silvana Debernardi et al" ) +
-  theme(legend.position = 'none')
-
-
+violin_plot <- (LYVEvscreatinine_plot | REG1Bvscreatinine_plot | TFF1vscreatinine_plot)
