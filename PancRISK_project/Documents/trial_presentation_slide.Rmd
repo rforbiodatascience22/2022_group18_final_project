@@ -69,7 +69,9 @@ slides > slide {
 
 <div style = "margin-top: -50px; margin-left: -30px; scale: 100%;">
 ```{r, fig.align='center',fig.width = 8.5, fig.height = 6, echo = FALSE}
-
+# PCA
+PCA_Final_plot + plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis",
+                             caption= "Data from Silvana Debernardi et al")
 
 layout <- '
 AB
