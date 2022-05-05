@@ -12,6 +12,7 @@ malignant_PCA <- my_data_clean_PCA %>%
          REG1B, 
          TFF1)
 
+
 arrow_style <- arrow(angle = 20, 
                      ends = "first", 
                      type = "closed", 
