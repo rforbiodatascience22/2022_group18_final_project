@@ -82,10 +82,37 @@ slides > slide {
 <div style = "margin-top: -50px">
 ```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
 (top_plot / bottom_plot) + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification",
                                            caption = "Data from Silvana Debernardi et al") + 
   theme_minimal() + 
   background_grid()
+```
+</div>
+
+## Results | PCA & K-means
+<style>
+slides > slide {
+  background: linear-gradient(#ffffff, #ffffff 85%, #ffffff);
+  background-color: white;
+  }
+</style>
+<div style = "margin-top: -50px">
+```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+
+diagnosis_PCA <- (Data_onto_PCA_plot + cumulative_variance_plot)+ 
+  plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis")
+
+
+kmeans_plot_ <- ( blood_diagnosis_plot_ | urinary_diagnosis_plot_)+
+  plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification of diagnosis and cancer stages",
+                  caption = "Data from Silvana Debernardi et al")+ 
+  theme( legend.position = "left")
+
+(diagnosis_PCA /kmeans_plot_)
+ 
+
 ```
 </div>
 

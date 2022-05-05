@@ -177,5 +177,11 @@ malignant_cumulative_variance_plot <- malignant_PCA_fit %>%
         plot.title = element_text(size = 10))
 
 
+diagnosis_PCA <- (Data_onto_PCA_plot + cumulative_variance_plot)+ 
+  plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis")
+
+diagnosis_PCA
+
 PCA_Final_plot <- (Data_onto_PCA_plot + cumulative_variance_plot) / (malignant_onto_PCA_plot + malignant_cumulative_variance_plot)
 PCA_Final_plot <- PCA_Final_plot + plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis")
+
