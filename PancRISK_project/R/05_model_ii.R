@@ -43,12 +43,9 @@ Data_onto_PCA_plot <- pca_fit %>%
              .fittedPC2, 
              color = diagnosis)) + 
   geom_point(size = 1.5) +
-  scale_color_manual(values = c(control ="#009E73" ,
-                                malignant = "#0072B2", 
-                                benign = "#D55E00")) + 
   theme_minimal() + 
   background_grid() +
-  theme(legend.position = "bottom",
+  theme(legend.position = "none",
         plot.title = element_text(size = 10)) +
   labs(x = "PC1", 
        y = "PC2",
@@ -118,13 +115,9 @@ malignant_onto_PCA_plot <- malignant_PCA_fit %>%
              .fittedPC2, 
              color = stage)) + 
   geom_point(size = 1.5) +
-  scale_color_manual(values = c("1" ="#009E73",
-                                "2" = "#0072B2", 
-                                "3" = "#D55E00" , 
-                                "4" = "#000000")) + 
   theme_minimal() + 
   background_grid() +
-  theme(legend.position = "bottom",
+  theme(legend.position = "none",
         plot.title = element_text(size = 10)) +
   labs(x = "PC1", 
        y = "PC2") +
@@ -185,5 +178,4 @@ malignant_cumulative_variance_plot <- malignant_PCA_fit %>%
 
 
 PCA_Final_plot <- (Data_onto_PCA_plot + cumulative_variance_plot) / (malignant_onto_PCA_plot + malignant_cumulative_variance_plot)
-PCA_Final_plot + plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis",
-                             caption= "Data from Silvana Debernardi et al")
+PCA_Final_plot <- PCA_Final_plot + plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis")

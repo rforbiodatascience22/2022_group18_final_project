@@ -1,4 +1,4 @@
-## Augmenting the clean data with the data fitted on each PC (will be used in for the K-means )
+# Wrangle data -----------------------------------------------------------------
 
 PCA <- my_data_clean_PCA %>% 
   filter(diagnosis != 0) %>%
@@ -14,12 +14,12 @@ PCA <- my_data_clean_PCA %>%
 
 # Model data -------------------------------------------------------------------
 
-pca_fit <- PCA  %>%
+pca_fit_ <- PCA  %>%
   select(where(is.numeric)) %>%
   prcomp(scale = TRUE)
 
 
-data_pca <- pca_fit %>% 
+data_pca <- pca_fit_ %>% 
   augment(PCA)
 
 
@@ -36,8 +36,6 @@ k_means_PC_1_2 <- data_pca %>%
     diagnosis = case_when(
       diagnosis == 1 ~ "benign",
       diagnosis == 2 ~ "malignant"))
-
-
 
 
 
@@ -93,9 +91,6 @@ complete_model <- k_means_PC_1_2 %>%
   kmeans(centers = 2)%>%
   augment(k_means_PC_1_2) %>% 
   rename(clusters = .cluster)
-
-
-
 
 
 plasma_CA19_9_alone <- plasma_CA19_9_alone %>%  
@@ -167,243 +162,244 @@ patchwork_diag + plot_annotation(
 
 
 
-
 data_aug_pca <- pca_fit %>% 
   augment(my_data_clean_PCA)
-
-
-
-# This model includes all the data features 
-
-## K-means : 
-
-## K-means on the whole data : 
-
-## Full model including plasma_CA19_9 + creatinine + LYVE1 + REG1B + TFF1 
-
-data_aug_pca_aug_k_means <- data_aug_pca %>%
-  select(patient_cohort,age,sex, plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
-  kmeans(centers = 3)%>%
-  augment(data_aug_pca) %>% 
-  rename(clusters_org = .cluster)%>%
-  mutate(clusters_org = case_when(
-    clusters_org == 1 ~ "1",
-    clusters_org == 2 ~ "2",
-    clusters_org == 3 ~ "3"))
-
-write_tsv(x = data_aug_pca_aug_k_means,
-          file = "PancRISK_project/data/05_k_means_on_whole_data.tsv")
-## K-means on the PC1 and PC2
-
-k_means_onto_PC_1_2 <- data_aug_pca_aug_k_means %>%
-  select(.fittedPC1, .fittedPC2)  %>%
-  kmeans(centers = 3) %>%
-  augment(data_aug_pca_aug_k_means) %>% 
-  rename(clusters_pca = .cluster)%>%
-  mutate(clusters_pca = case_when(
-    clusters_pca == 1 ~ "1",
-    clusters_pca == 2 ~ "2",
-    clusters_pca == 3 ~ "3"),
-    diagnosis = case_when(
-      diagnosis == 0 ~ "control",
-      diagnosis == 1 ~ "benign",
-      diagnosis == 2 ~ "malignant"))
-
-write_tsv(x = k_means_onto_PC_1_2,
-          file = "PancRISK_project/data/06_k_means_onto_PC_1_2.tsv")
-## Model including only plasma_CA19_9 
-
-plasma_CA19_9_alone_k_means <- data_aug_pca %>%
-  select(patient_cohort,age,sex,plasma_CA19_9 ) %>%
-  kmeans(centers = 3)%>%
-  augment(data_aug_pca) %>% 
-  rename(clusters_org = .cluster)
-
-## Model including only LYVE1, REG1B, TFF1 biomarkers
-
-biomarkers_only_k_means <- data_aug_pca %>%
-  select(patient_cohort,age,sex, LYVE1, REG1B, TFF1)  %>%
-  kmeans(centers = 3)%>%
-  augment(data_aug_pca) %>% 
-  rename(clusters_org = .cluster)
-
-## Full model including plasma_CA19_9 + creatinine + LYVE1 + REG1B + TFF1 
-
-complete_model_k_means <- data_aug_pca %>%
-  select(patient_cohort,age,sex, LYVE1, REG1B, TFF1,plasma_CA19_9)  %>%
-  kmeans(centers = 3)%>%
-  augment(data_aug_pca) %>% 
-  rename(clusters_org = .cluster)
-
-
-## plot  showing the real clusters on PC1 and PC2 space
-
-pl1 <- k_means_onto_PC_1_2 %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = diagnosis)) +
-  geom_point() +
-  labs( title = "The true clusters ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom",
-                plot.title = element_text(size=8))+
-  theme_minimal(8)
-
-#The  clusters predicted by the K means on the whole data plot into PC1 and PC2 space
-
-pl2 <- data_aug_pca_aug_k_means %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
-  geom_point() +
-  labs( subtitle = "The clusters predicted by K-means performed on the original data plotted into the PC1 and PC2 space ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom",
-        plot.title = element_text(size=8))+
-  theme_minimal(8)
-
-
-#The  clusters predicted by the K means on the data fitted into PC1 and PC2  plotted  into PC1 and PC2 space
-
-pl3 <- k_means_onto_PC_1_2 %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_pca)) +
-  geom_point() +
-  labs( subtitle = "The clusters predicted by K-means performed on the data fitted onto PC1 and PC2 plotted into the PC1 and PC2 space ")+
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom",
-        plot.title = element_text(size=8))+
-  theme_minimal(8)
-
-
-patchwork <-  (pl1 /pl2 / pl3) + plot_layout(guides = 'collect')
-patchwork + plot_annotation(
-  title = "K-means results " ,
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'right')
-
-
-
-plasma_CA19_9_alone_plot <- plasma_CA19_9_alone_k_means %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
-  geom_point() +
-  labs( title = " plasma_CA19_9 ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "none",
-        plot.title = element_text(size=8))+
-  theme_minimal(8)
-
-biomarkers_only_plot <- biomarkers_only_k_means %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
-  geom_point() +
-  labs( title = "LYVE1+REG1B+ TFF1 ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "none",
-        plot.title = element_text(size=8))+
-  theme_minimal(8)
-
-complete_model_plot <- complete_model_k_means %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
-  geom_point() +
-  labs( title = "  LYVE1+REG1B+TFF1+plasma_CA19_9 ") +
-  theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "none",
-        plot.title = element_text(size=8))+
-  theme_minimal(8)
-
-patchwork_diagnosis <-  (pl1|plasma_CA19_9_alone_plot |biomarkers_only_plot | complete_model_plot)+ 
-  plot_layout(guides = 'collect') 
-patchwork_diagnosis + plot_annotation(
-  title = "K-means results " ,
-  caption= "Data from Silvana Debernardi et al" )&
-  theme(legend.position = "bottom")
-
-
-
-
-#--------------------
-
-
-
-#--------------------
-
-#K-means to distinguish the 4 stages of malignant patients
-
 
 malignant_data_aug_pca <- malignant_PCA_fit %>% 
   augment(malignant_PCA)
 
 
-malignant_aug_pca_aug_k_means <- malignant_data_aug_pca %>%
-  select(patient_cohort,age,sex ,stage , plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
-  kmeans(centers = 4)%>%
-  augment(malignant_data_aug_pca) %>% 
-  rename(clusters_org = .cluster)%>%
-  mutate(clusters_org = case_when(
-    clusters_org == 1 ~ "stage I",
-    clusters_org == 2 ~ "stage II",
-    clusters_org == 3 ~ "stage III", 
-    clusters_org == 4 ~ "stage IV"))
 
 
-#K-means onto the PC1 and PC2
+# Model data -------------------------------------------------------------------
 
-malignant_k_means_onto_PC_1_2 <- malignant_aug_pca_aug_k_means %>%
-  select(.fittedPC1, .fittedPC2)  %>%
+
+
+Kmeans_blood_diagnosis <- data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         sex,
+         #diagnosis,# the K-means need to guess the diagnosis , i think we are not allowed to give it as input
+         plasma_CA19_9) %>%
+  kmeans(centers = 3) %>%
+  augment(data_aug_pca) %>% 
+  rename(clusters= .cluster) %>% 
+  mutate(diagnosis = case_when( diagnosis == 0 ~ "control",
+                                diagnosis == 1 ~ "benign",
+                                diagnosis == 2 ~ "malignant"))
+
+Kmeans_urinary_diagnosis <- data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         sex, 
+         LYVE1, 
+         REG1B, 
+         TFF1)  %>%
+  kmeans(centers = 3) %>%
+  augment(data_aug_pca) %>% 
+  rename(clusters = .cluster) %>% 
+  mutate(diagnosis = case_when(diagnosis == 0 ~ "control",
+                                  diagnosis == 1 ~ "benign",
+                                  diagnosis == 2 ~ "malignant"))
+
+# Visualise data ---------------------------------------------------------------
+
+
+# How plasma CA19_9 (blood diagnosis ) can discriminate between control benign and malignant individuals
+
+
+Kmeans_blood_diagnosis_control <-Kmeans_blood_diagnosis %>% 
+  filter(diagnosis=="control")
+
+Kmeans_blood_diagnosis_benign <-Kmeans_blood_diagnosis %>% 
+  filter(diagnosis=="benign")
+
+Kmeans_blood_diagnosis__malignant <-Kmeans_blood_diagnosis %>% 
+  filter(diagnosis=="malignant")
+
+blood_diagnosis_plot <- ggplot() +
+  geom_point( data= Kmeans_blood_diagnosis_control , aes(x = .fittedPC1, y = .fittedPC2 , color = clusters, shape = diagnosis ), size = 2) +
+  geom_point( data= Kmeans_blood_diagnosis_benign , aes(x = .fittedPC1, y = .fittedPC2 , color = clusters, shape = diagnosis ), size = 2 ) +
+  geom_point( data= Kmeans_blood_diagnosis_malignant , aes(x = .fittedPC1, y = .fittedPC2 , color = clusters , shape = diagnosis ), size = 2 ) +
+  scale_shape_manual(values=c(1 ,2 ,3))+
+  labs( title = "plasma_CA19_9") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+blood_diagnosis_plot<-blood_diagnosis_plot+
+  guides(size='none')+
+  theme(legend.position = "bottom")
+
+# How the 3 biomarkers (urinary diagnosis ) can discriminate between control benign and malignant individuals
+
+
+Kmeans_urinary_diagnosis_control <-Kmeans_urinary_diagnosis %>% 
+  filter(diagnosis=="control")
+
+Kmeans_urinary_diagnosis_benign <- Kmeans_urinary_diagnosis %>% 
+  filter(diagnosis=="benign")
+
+Kmeans_urinary_diagnosis_malignant <- Kmeans_urinary_diagnosis %>% 
+  filter(diagnosis=="malignant")
+
+urinary_diagnosis_plot <- ggplot() +
+  geom_point( data= Kmeans_urinary_diagnosis_control , aes(x = .fittedPC1, y = .fittedPC2 , color = clusters, shape = diagnosis ), size = 2) +
+  geom_point( data= Kmeans_urinary_diagnosis_benign , aes(x = .fittedPC1, y = .fittedPC2 , color = clusters, shape = diagnosis ), size = 2 ) +
+  geom_point( data= Kmeans_urinary_diagnosis_malignant , aes(x = .fittedPC1, y = .fittedPC2 , color = clusters , shape = diagnosis ), size = 2 ) +
+  scale_shape_manual(values=c(1 ,2 ,3))+
+  labs( title ="LYVE1 + REG1B + TFF1") +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir")+
+  theme(plot.title = element_text(size=8))+
+  theme_minimal(8)
+
+urinary_diagnosis_plot<-urinary_diagnosis_plot+
+  guides(size='none')+
+  theme(legend.position = "bottom")
+
+
+kmeans_plot <- ( blood_diagnosis_plot | urinary_diagnosis_plot)
+kmeans_plot <- kmeans_plot + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification of diagnosis and cancer stages",
+                                                         caption = "Data from Silvana Debernardi et al")
+
+
+
+
+
+# Model data -------------------------------------------------------------------
+
+Kmeans_blood_diagnosis <- data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         sex,
+         diagnosis,
+         plasma_CA19_9) %>%
+  kmeans(centers = 3) %>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster) %>% 
+  mutate(clusters_org = case_when(diagnosis == 0 ~ "control",
+                                  diagnosis == 1 ~ "benign",
+                                  diagnosis == 2 ~ "malignant"))
+
+Kmeans_blood_malignant <- malignant_data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         sex,
+         stage, 
+         plasma_CA19_9) %>%
   kmeans(centers = 4) %>%
-  augment(malignant_aug_pca_aug_k_means) %>% 
-  rename(clusters_pca = .cluster)%>%
-  mutate(clusters_pca = case_when(
-    clusters_pca == 1 ~ "stage I",
-    clusters_pca == 2 ~ "stage II",
-    clusters_pca == 3 ~ "stage III", 
-    clusters_pca == 4 ~ "stage IV"),
-    stage = case_when(
-      stage == 1 ~ "stage I",
-      stage == 2 ~ "stage II",
-      stage == 3 ~ "stage III", 
-      stage == 4 ~ "stage IV"))
+  augment(malignant_data_aug_pca) %>% 
+  rename(clusters_org = .cluster) %>%
+  mutate(clusters_org = case_when(clusters_org == 1 ~ "stage I",
+                                  clusters_org == 2 ~ "stage II",
+                                  clusters_org == 3 ~ "stage III",
+                                  clusters_org == 4 ~ "stage IV"))
 
+Kmeans_urinary_diagnosis <- data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         sex, 
+         LYVE1, 
+         REG1B, 
+         TFF1)  %>%
+  kmeans(centers = 4) %>%
+  augment(data_aug_pca) %>% 
+  rename(clusters_org = .cluster) %>% 
+  mutate(clusters_org = case_when(diagnosis == 0 ~ "control",
+                                  diagnosis == 1 ~ "benign",
+                                  diagnosis == 2 ~ "malignant"))
 
-#The real clusters plot into the  PC1 and PC2 space
-pl1_malignant<- malignant_k_means_onto_PC_1_2 %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = stage)) +
+Kmeans_urinary_malignant <- malignant_data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         sex,
+         stage,
+         LYVE1, 
+         REG1B, 
+         TFF1) %>%
+  kmeans(centers = 4) %>%
+  augment(malignant_data_aug_pca) %>% 
+  rename(clusters_org = .cluster) %>%
+  mutate(clusters_org = case_when(clusters_org == 1 ~ "stage I",
+                                  clusters_org == 2 ~ "stage II",
+                                  clusters_org == 3 ~ "stage III",
+                                  clusters_org == 4 ~ "stage IV"))
+
+# Visualise data ---------------------------------------------------------------
+
+plasma_CA19_9_alone_plot_diagnosis <- Kmeans_blood_diagnosis %>%
+  ggplot(aes(x = .fittedPC1, 
+             y = .fittedPC2, 
+             colour = clusters_org)) +
   geom_point() +
-  labs( title = "The true clusters ploted into the PC1 and PC2 space ") +
   theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom")+
-  theme_minimal(8)
+                base_family = "Avenir") +
+  theme_minimal(8) + 
+  theme(legend.position = "bottom",
+        plot.title = element_text(size = 8)) +
+  labs(title = "Plasma_CA_19_9",
+       x = "PC1",
+       y = "PC2") +
+  ylim(-5, 5) +
+  xlim(-6, 6)
 
-#The  clusters predicted by the K means on the whole data plot into PC1 and PC2 space
-
-pl2_malignant <- malignant_aug_pca_aug_k_means %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_org)) +
+plasma_CA19_9_alone_plot_stages <- Kmeans_blood_malignant %>%
+  ggplot(aes(x = .fittedPC1, 
+             y = .fittedPC2, 
+             colour = clusters_org)) +
   geom_point() +
-  labs( subtitle = "The clusters predicted by K-means performed on the original data plotted into the PC1 and PC2 space ") +
   theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom")+
-  theme_minimal(8)
+                base_family = "Avenir") +
+  theme_minimal(8) +
+  theme(legend.position = "bottom",
+        plot.title = element_text(size = 8)) +
+  labs(x = "PC1",
+       y = "PC2") +
+  ylim(-5, 5) +
+  xlim(-6, 6)
 
-
-#The  clusters predicted by the K means on the data fitted into PC1 and PC2  plotted  into PC1 and PC2 space
-
-pl3_malignant <- malignant_k_means_onto_PC_1_2 %>%
-  ggplot(aes(x = .fittedPC1, y = .fittedPC2, colour = clusters_pca)) +
+urinary_alone_diagnosis <- Kmeans_urinary_diagnosis %>%
+  ggplot(aes(x = .fittedPC1, 
+             y = .fittedPC2, 
+             colour = clusters_org)) +
   geom_point() +
-  labs( subtitle = "The clusters predicted by K-means performed on the data fitted onto PC1 and PC2 plotted into the PC1 and PC2 space ")+
   theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(legend.position = "bottom")+
-  theme_minimal(8)
+                base_family = "Avenir") +
+  theme_minimal(8) + 
+  theme(legend.position = "none",
+        plot.title = element_text(size = 8)) +
+  labs(title = "LYVE1 + REG1B + TFF1",
+       x = "PC1",
+       y = "PC2") +
+  ylim(-5, 5) +
+  xlim(-6, 6)
+
+urinary_only_stages <- Kmeans_urinary_malignant %>%
+  ggplot(aes(x = .fittedPC1, 
+             y = .fittedPC2, 
+             colour = clusters_org)) +
+  geom_point() +
+  theme_minimal(base_size = 10,
+                base_family = "Avenir") +
+  theme_minimal(8) +
+  theme(legend.position = "none",
+        plot.title = element_text(size = 8)) +
+  labs(x = "PC1",
+       y = "PC2") +
+  ylim(-5, 5) +
+  xlim(-6, 6)
+
+Final_kmeans_plot <- (plasma_CA19_9_alone_plot_diagnosis + urinary_alone_diagnosis) / (plasma_CA19_9_alone_plot_stages + urinary_only_stages)
+Final_kmeans_plot <- Final_kmeans_plot + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification of diagnosis and cancer stages",
+                                                         caption = "Data from Silvana Debernardi et al")
+
+top_plot <- (Data_onto_PCA_plot + cumulative_variance_plot) + (plasma_CA19_9_alone_plot_diagnosis + urinary_alone_diagnosis)
+bottom_plot <- (malignant_onto_PCA_plot + malignant_cumulative_variance_plot) + (plasma_CA19_9_alone_plot_stages + urinary_only_stages)
 
 
-patchwork <-  (pl1_malignant /pl2_malignant / pl3_malignant) 
-patchwork + plot_annotation(
-  title = "K-means results " ,
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'right')
+
+
 
 

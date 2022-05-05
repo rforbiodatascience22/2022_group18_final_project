@@ -79,81 +79,13 @@ slides > slide {
   background-color: white;
   }
 </style>
- 
-
-<div style = "margin-top: -50px; margin-left: -30px; scale: 100%;">
-```{r, fig.align='center',fig.width = 8.5, fig.height = 6, echo = FALSE}
-# PCA
-PCA_Final_plot + plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis",
-                             caption= "Data from Silvana Debernardi et al")
-
-layout <- '
-AB
-'
-patchwork <- wrap_plots(A=Data_onto_PCA_plot ,
-           B=cumulative_variance_plot ,
-           design = layout)
-           
-
-malignant_patchwork <-  wrap_plots(A=malignant_onto_PCA_plot ,
-           B=malignant_cumulative_variance_plot ,
-           design = layout)
-  
-
-patchwork<-patchwork + plot_annotation(
-  title = "PCA results " ,
-  subtitle = "The first two PCs can discriminate between patients suffering from PC from the control and benign diagnosed ones  ",
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=6),
-        plot.title = element_text(size=8))
-
-malignant_patchwork<- malignant_patchwork + plot_annotation(
-  title = "PCA results " ,
-  subtitle = "The first two PCs can't really discriminate between the 4 PDAC stages ",
-  caption= "Data from Silvana Debernardi et al" )& 
-  theme(legend.position = 'bottom',
-        plot.subtitle =  element_text(size=6),
-        plot.title = element_text(size=8))
-
-
-patchwork_diagnosis_1 <-  (pl1|plasma_CA19_9_alone_plot) +
-  plot_layout(guides = 'collect')+ 
-  plot_annotation(
-  title = "K-means results " )&
-  theme(legend.position = "bottom",
-        plot.title = element_text(size=7))
-
-patchwork_diagnosis_2 <-(biomarkers_only_plot|complete_model_plot)+ 
-  plot_layout(guides = 'collect') + 
-  plot_annotation(
-  caption= "Data from Silvana Debernardi et al" )&
-  theme(legend.position = "bottom",
-        plot.title = element_text(size=7))
-
-
-
-
-top_patchwork <-(patchwork + theme(plot.margin = unit(c(0,3,0,0), "pt")))|
-(patchwork_diagnosis_1 + theme(plot.margin = unit(c(0,0,0,10), "pt")))
-
-bottom_patchwork <-(malignant_patchwork + theme(plot.margin = unit(c(0,3,0,0), "pt")))|
-(patchwork_diagnosis_2 + theme(plot.margin = unit(c(0,0,0,10), "pt")))
-
-
-#top_patchwork <-  wrap_plots(A=patchwork ,
-           #B=patchwork_diagnosis_1 )
-           #design = layout)
-  
-#bottom_patchwork <-  wrap_plots(A=malignant_patchwork ,
-           #B=patchwork_diagnosis_2 )
-           #design = layout)
-
-
-
-top_patchwork/bottom_patchwork 
-
-
+<div style = "margin-top: -50px">
+```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+(top_plot / bottom_plot) + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification",
+                                           caption = "Data from Silvana Debernardi et al") + 
+  theme_minimal() + 
+  background_grid()
 ```
 </div>
 
