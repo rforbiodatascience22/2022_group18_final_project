@@ -79,18 +79,13 @@ slides > slide {
   background-color: white;
   }
 </style>
- 
-
-<div style = "margin-top: -50px; margin-left: -30px; scale: 100%;">
-```{r, fig.align='center',fig.width = 8.5, fig.height = 6, echo = FALSE}
-# PCA
-left_plot <- PCA_Final_plot + plot_annotation(title = "Principal Component Analysis of PancRISK diagnosis")
-
-right_plot <- Final_kmeans_plot + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification of diagnosis and cancer stages",
-                                                  caption = "Data from Silvana Debernardi et al")
-
-left_plot + right_plot
-
+<div style = "margin-top: -50px">
+```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE)
+(top_plot / bottom_plot) + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification",
+                                           caption = "Data from Silvana Debernardi et al") + 
+  theme_minimal() + 
+  background_grid()
 ```
 </div>
 

@@ -16,9 +16,10 @@ Kmeans_blood_diagnosis <- data_aug_pca %>%
          plasma_CA19_9) %>%
   kmeans(centers = 3) %>%
   augment(data_aug_pca) %>% 
-  mutate(clusters_org = case_when(cluster_org == 0 ~ "control",
-                                  cluster_org == 1 ~ "benign",
-                                  cluster_org == 2 ~ "malignant"))
+  rename(clusters_org = .cluster) %>% 
+  mutate(clusters_org = case_when(diagnosis == 0 ~ "control",
+                                  diagnosis == 1 ~ "benign",
+                                  diagnosis == 2 ~ "malignant"))
 
 Kmeans_blood_malignant <- malignant_data_aug_pca %>%
   select(patient_cohort,
@@ -44,9 +45,9 @@ Kmeans_urinary_diagnosis <- data_aug_pca %>%
   kmeans(centers = 4) %>%
   augment(data_aug_pca) %>% 
   rename(clusters_org = .cluster) %>% 
-  mutate(clusters_org = case_when(cluster_org == 0 ~ "control",
-                                  cluster_org == 1 ~ "benign",
-                                  cluster_org == 2 ~ "malignant"))
+  mutate(clusters_org = case_when(diagnosis == 0 ~ "control",
+                                  diagnosis == 1 ~ "benign",
+                                  diagnosis == 2 ~ "malignant"))
 
 Kmeans_urinary_malignant <- malignant_data_aug_pca %>%
   select(patient_cohort,
@@ -129,5 +130,8 @@ urinary_only_stages <- Kmeans_urinary_malignant %>%
   xlim(-6, 6)
 
 Final_kmeans_plot <- (plasma_CA19_9_alone_plot_diagnosis + urinary_alone_diagnosis) / (plasma_CA19_9_alone_plot_stages + urinary_only_stages)
-Final_kmeans_plot + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification of diagnosis and cancer stages",
-                                    caption = "Data from Silvana Debernardi et al")
+Final_kmeans_plot <- Final_kmeans_plot + plot_annotation(title = "Comparison between Blood vs Urinary biomarkers in classification of diagnosis and cancer stages",
+                                                         caption = "Data from Silvana Debernardi et al")
+
+top_plot <- (Data_onto_PCA_plot + cumulative_variance_plot) + (plasma_CA19_9_alone_plot_diagnosis + urinary_alone_diagnosis)
+bottom_plot <- (malignant_onto_PCA_plot + malignant_cumulative_variance_plot) + (plasma_CA19_9_alone_plot_stages + urinary_only_stages)
