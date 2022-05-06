@@ -131,18 +131,22 @@ data_long <- clean_data %>%
 
 #  Levels of the 3 biomarkers in control, benign, and  (PDAC) samples
 
-LYVEvscreatinine <- 
-  select(clean_data, diagnosis , stage , LYVE1, creatinine) %>%
+LYVEvscreatinine <- clean_data%>%
+  select( diagnosis , stage , LYVE1, creatinine) %>%
+  drop_na(diagnosis)  %>%
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",
     diagnosis == "benign" ~ "benign",
+    stage  == "I" ~ "PDAC I-II",
     stage  == "IA" ~ "PDAC I-II",
     stage  == "IB" ~ "PDAC I-II",
+    stage  == "II" ~ "PDAC I-II",
     stage  == "IIA" ~ "PDAC I-II",
     stage  == "IIB" ~ "PDAC I-II",
     stage  == "III" ~ "PDAC III-IV",
     stage  == "IV" ~ "PDAC III-IV") , 
     LYVE1 = LYVE1 / creatinine)
+
 
 LYVEvscreatinine_plot <-
   ggplot(data = LYVEvscreatinine, 
@@ -159,17 +163,20 @@ LYVEvscreatinine_plot <-
   theme(legend.position = "none",
         axis.text.x = element_text(angle = 45))
 
-REG1Bvscreatinine <- 
-  select(clean_data, diagnosis , stage , REG1B, creatinine) %>%
+
+REG1Bvscreatinine <- clean_data %>%
+  select(diagnosis , stage , REG1B, creatinine) %>%
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",
     diagnosis == "benign" ~ "benign",
+    stage  == "I" ~ "PDAC I-II",
     stage  == "IA" ~ "PDAC I-II",
     stage  == "IB" ~ "PDAC I-II",
+    stage  == "II" ~ "PDAC I-II",
     stage  == "IIA" ~ "PDAC I-II",
     stage  == "IIB" ~ "PDAC I-II",
     stage  == "III" ~ "PDAC III-IV",
-    stage  == "IV" ~ "PDAC III-IV"), 
+    stage  == "IV" ~ "PDAC III-IV") , 
     REG1B = REG1B/ creatinine)
 
 REG1Bvscreatinine_plot <- 
@@ -192,12 +199,14 @@ TFF1vscreatinine <-
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",
     diagnosis == "benign" ~ "benign",
+    stage  == "I" ~ "PDAC I-II",
     stage  == "IA" ~ "PDAC I-II",
     stage  == "IB" ~ "PDAC I-II",
+    stage  == "II" ~ "PDAC I-II",
     stage  == "IIA" ~ "PDAC I-II",
     stage  == "IIB" ~ "PDAC I-II",
     stage  == "III" ~ "PDAC III-IV",
-    stage  == "IV" ~ "PDAC III-IV"),
+    stage  == "IV" ~ "PDAC III-IV") ,
     TFF1 = TFF1/ creatinine)
 
 TFF1vscreatinine_plot <-
@@ -216,3 +225,4 @@ TFF1vscreatinine_plot <-
         axis.text.x = element_text(angle = 45))
 
 violin_plot <- (LYVEvscreatinine_plot | REG1Bvscreatinine_plot | TFF1vscreatinine_plot)
+violin_plot

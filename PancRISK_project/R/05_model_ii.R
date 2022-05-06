@@ -45,7 +45,7 @@ Data_onto_PCA_plot <- pca_fit %>%
   geom_point(size = 1.5) +
   theme_minimal() + 
   background_grid() +
-  theme(legend.position = "none",
+  theme(legend.position = "right",
         plot.title = element_text(size = 10)) +
   labs(x = "PC1", 
        y = "PC2",

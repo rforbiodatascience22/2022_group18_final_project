@@ -1,6 +1,6 @@
 data_aug_pca <- pca_fit %>% 
   augment(my_data_clean_PCA)%>%
-  filter(.fittedPC1> -6) 
+  filter(.fittedPC1> -6) # removing an outtlier for better K-means 
 
 
 malignant_data_aug_pca <- malignant_PCA_fit %>% 
@@ -46,9 +46,10 @@ blood_benign_statistics <-Kmeans_blood_diagnosis_benign%>%
   group_by(clusters)%>%
   summarise(count = n())
 
-blood_malignant_statistics <-Kmeans_blood_diagnosis__malignant%>%
+blood_malignant_statistics <-Kmeans_blood_diagnosis_malignant%>%
   group_by(clusters)%>%
   summarise(count = n())
+
 
 
 Kmeans_urinary_diagnosis_ <- data_aug_pca %>%
@@ -89,6 +90,45 @@ malignant_statistics <-Kmeans_urinary_diagnosis_malignant%>%
   summarise(count = n())
 
 
+Kmeans_complete_diagnosis_ <- data_aug_pca %>%
+  select(patient_cohort,
+         age,
+         diagnosis,
+         sex,
+         LYVE1, 
+         REG1B, 
+         TFF1,
+         plasma_CA19_9) %>%
+  kmeans(centers = 3) %>%
+  augment(data_aug_pca) %>% 
+  rename(clusters= .cluster) %>% 
+  mutate(diagnosis = case_when( diagnosis == 0 ~ "control",
+                                diagnosis == 1 ~ "benign",
+                                diagnosis == 2 ~ "malignant"))
+
+Kmeans_complete_diagnosis_control <- Kmeans_complete_diagnosis_ %>% 
+  filter(diagnosis=="control")
+
+Kmeans_complete_diagnosis_benign <- Kmeans_complete_diagnosis_ %>% 
+  filter(diagnosis=="benign")
+
+Kmeans_complete_diagnosis_malignant <- Kmeans_complete_diagnosis_ %>% 
+  filter(diagnosis=="malignant")
+
+complete_control_statistics <-Kmeans_complete_diagnosis_control%>%
+  group_by(clusters)%>%
+  summarise(count = n())
+
+complete_benign_statistics <-Kmeans_complete_diagnosis_benign%>%
+  group_by(clusters)%>%
+  summarise(count = n())
+
+complete_malignant_statistics <-Kmeans_complete_diagnosis_malignant%>%
+  group_by(clusters)%>%
+  summarise(count = n())
+
+
+
 # Visualise data ---------------------------------------------------------------
 
 
@@ -116,6 +156,7 @@ blood_diagnosis_plot <- ggplot() +
               size = 2 ) +
   scale_shape_manual(values=c(1 ,2 ,3))+
   xlim(-6, 3.5)+
+  ylim(-5, 5)+
   labs( title = "plasma_CA19_9") +
   theme_minimal(base_size = 10,
                 base_family = "Avenir")+
@@ -154,6 +195,7 @@ urinary_diagnosis_plot <- ggplot() +
                   shape = diagnosis ), 
               size = 2 ) +
   xlim(-6, 3.5)+
+  ylim(-5, 5)+
   scale_shape_manual(values=c(1 ,2 ,3))+
   labs( title ="LYVE1 + REG1B + TFF1") +
   theme_minimal(base_size = 10,
