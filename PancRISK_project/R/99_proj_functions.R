@@ -49,7 +49,7 @@ print_acc <- function(data_1,
     pull()
   
   accurancy_2 <- 
-    data_1 %>%
+    data_2 %>%
     tidy() %>%
     filter(term == "accuracy") %>%
     mutate(result = paste(round(estimate, 
@@ -149,14 +149,14 @@ plot_roc <- function(roc_render_1,
                   y = ploty_2, 
                   color = "high")) +
     scale_color_discrete(name="Contrast",
-                         labels=c(paste0("Control vs. Benign\n",
+                         labels=c(paste0("Control vs. Benign\nAUC: ",
                                          round(auc_1, 
                                                digits = 3), 
                                          ", 95% CI: ", 
                                          auc_ci_1[1], 
                                          "-", 
                                          auc_ci_1[3]), 
-                                  paste0("Benign vs. Malignant\n",
+                                  paste0("Benign vs. Malignant\nAUC: ",
                                          round(auc_2, 
                                                digits = 3), 
                                          ", 95% CI: ", 
