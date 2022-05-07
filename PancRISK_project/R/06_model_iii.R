@@ -32,7 +32,7 @@ Kmeans_blood_diagnosis_benign <-Kmeans_blood_diagnosis_ %>%
   filter(diagnosis=="benign")%>%
   filter(.fittedPC1> -6) 
 
-Kmeans_blood_diagnosis__malignant <-Kmeans_blood_diagnosis_ %>% 
+Kmeans_blood_diagnosis_malignant <-Kmeans_blood_diagnosis_ %>% 
   filter(diagnosis=="malignant")%>%
   filter(.fittedPC1> -6) 
 
