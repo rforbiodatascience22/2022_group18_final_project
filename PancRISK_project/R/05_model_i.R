@@ -235,25 +235,25 @@ acc_1 <-
               confusionMatrix(),
             data_2 = table(my_data_val_just_plasma_2$cutoff_plasma, my_data_val_just_plasma_2$diagnosis) %>%
               confusionMatrix(),
-            title = "Binary CA19_9")
+            title = "Cand. 1: Binary CA19_9")
 
 acc_2 <- 
   print_acc(data_1 = table(my_data_val_simple_2$pred, my_data_val_simple_2$diagnosis) %>%
               confusionMatrix(),
             data_2 = table(my_data_val_simple_1$pred, my_data_val_simple_1$diagnosis) %>%
               confusionMatrix(),
-            title = "Old panel")
+            title = "Cand. 2: Old panel")
 
 acc_3 <-
   print_acc(data_1 = table(my_data_val_2$pred, my_data_val_2$diagnosis) %>%
               confusionMatrix(),
             data_2 = table(my_data_val_1$pred, my_data_val_1$diagnosis) %>%
               confusionMatrix(),
-            title = "PancRISK without Plasma")
+            title = "Cand. 3: PancRISK without Plasma")
 
 acc_4 <- 
   print_acc(data_1 = table(my_data_val_log_2$pred, my_data_val_log_2$diagnosis) %>%
               confusionMatrix(),
             data_2 = table(my_data_val_log_1$pred, my_data_val_log_1$diagnosis) %>%
               confusionMatrix(),
-            title = "PancRISK (Sep. regression)")
+            title = "Cand. 4: PancRISK (Sep. regression)")
