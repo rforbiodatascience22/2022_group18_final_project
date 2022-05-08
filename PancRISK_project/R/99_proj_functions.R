@@ -1,10 +1,3 @@
-# Validate ---------------------------------------------------------------------
-validate <- function(data, 
-                     model, 
-                     diagnosis_1, 
-                     diagnosis_2) {
-  
-}
 # Cutoff -----------------------------------------------------------------------
 find_cutoff <- function(data, 
                         const_1, 
@@ -17,6 +10,7 @@ find_cutoff <- function(data,
                          const_1, 
                          const_2))
 }
+
 # Fit --------------------------------------------------------------------------
 fit <- function(data, 
                 form, 
@@ -29,6 +23,7 @@ fit <- function(data,
         na.action = na.omit,
         family = binomial(link = "logit"))
 }
+
 # Accuracy ---------------------------------------------------------------------
 print_acc <- function(data_1, 
                       data_2, 
@@ -49,7 +44,7 @@ print_acc <- function(data_1,
     pull()
   
   accurancy_2 <- 
-    data_1 %>%
+    data_2 %>%
     tidy() %>%
     filter(term == "accuracy") %>%
     mutate(result = paste(round(estimate, 
@@ -91,7 +86,6 @@ print_acc <- function(data_1,
     knitr::kable(align = c(rep('c', 
                                times = 3)), 
                  col.names = NULL,) %>%
-    #add_header_above(c("Benign vs. Malignant" = 1, " " = 1)) %>% 
     add_header_above(c("\ \n\n \ " = 1, 
                        setNames(object = 1, 
                                 nm = "Control vs. Malignant"), 
@@ -149,14 +143,14 @@ plot_roc <- function(roc_render_1,
                   y = ploty_2, 
                   color = "high")) +
     scale_color_discrete(name="Contrast",
-                         labels=c(paste0("Control vs. Benign\n",
+                         labels=c(paste0("Control vs. Benign\nAUC: ",
                                          round(auc_1, 
                                                digits = 3), 
                                          ", 95% CI: ", 
                                          auc_ci_1[1], 
                                          "-", 
                                          auc_ci_1[3]), 
-                                  paste0("Benign vs. Malignant\n",
+                                  paste0("Benign vs. Malignant\nAUC: ",
                                          round(auc_2, 
                                                digits = 3), 
                                          ", 95% CI: ", 

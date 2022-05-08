@@ -21,8 +21,8 @@ color: #515151;
   
 - Control study: PancRISK
   - Blood biomarker; plasma_CA19_9
-  - Normalization; creatinine
   - Urinary biomarkers; REG1A, REG1B, LYVE1, TFF1
+  - Normalization; creatinine and age
   - Diagnosis; control, benign, malignant
 
 - Aim
@@ -80,7 +80,8 @@ slides > slide {
   }
 </style>
 <div style = "margin-top: -50px">
-```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
+```{r, echo = FALSE,warning = FALSE, message = FALSE, fig.width = 9.5, fig.height = 5.5}
+
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 diagnosis_PCA <- (Data_onto_PCA_plot + cumulative_variance_plot)+ 
@@ -109,16 +110,16 @@ slides > slide {
 <div style = "margin-top: -40px; margin-left: -40px;">
 ```{r, fig.width = 12, fig.height = 5.2, echo = FALSE}
 (plot_roc(roc1, roc2, 
-          title = "Binary CA19_9",
+          title = "Cand. 1: Binary CA19_9",
           caption = "Used binary plasma CA19_9\nCorrected for age\nN = 390") + 
  plot_roc(roc9, roc10, 
-          title = "PancRISK (Sep. regressions)",
+          title = "Cand. 4: PancRISK (Sep. regressions)",
           caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nSeperate regressions for contrasts:\nControl vs. Benign and Benign vs. Malignant")) /
 (plot_roc(roc5, roc6, 
-          title = "PancRISK without Plasma",
+          title = "Cand. 3: PancRISK without Plasma",
           caption = "Used REG1B, LYVE1 and TFF1\ncorrected for age and creatinine\nN = 590") + 
  plot_roc(roc7, roc8, 
-          title = "PancRISK (Multinomial)",
+          title = "Cand. 4: PancRISK (Multinomial)",
           caption = "Used REG1B, LYVE1, TFF1 and binary plasma CA19_9\nCorrected for age and creatinine\nN = 590\nMultinom regression contrast Control vs. Benign vs. Malignant"))
 ```
 </div>
@@ -142,12 +143,21 @@ acc_4
 
 ## Discussion
 
-- Blood vs Urinary biomarkers in classification
-  1) Blood plasma shows importance in classification of diagnosis
-  2) K-means with or without PCA performs poorly in classification
+- Blood vs Urinary diagnosis classification :
+- <font size="4">1) K-means based on urinary bio-markers slightly better than the one based on plasma_CA19_9</font>
+
+- <font size="4">2) Blood plasma shows importance in classification during the multinational logistic regression</font>
+
+- <font size="4">3) The complete model including blood and urinary markers achieves the best sensitivity and specificity</font>
 
 - Possible explanation:
-  1) dataset contains a complex frame of attributes
-  2) Patients with malignant diagnosis should be subdivided into stages
-  to improve the classification performance.
-  3) Other biomarkers could provide better performance
+- <font size="4">1) Patients with malignant diagnosis should be subdivided into stages
+  to improve the classification performance.</font>
+  
+- <font size="4">2) Loss of 160 observations due to plasma_CA19_9 NA values</font>
+  
+- Further research aim:
+- <font size="4">Discovery of new urinary bio-markers could provide a non invasive diagnosis with better diagnosis accuracy</font>
+
+    
+   

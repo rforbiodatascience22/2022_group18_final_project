@@ -10,19 +10,22 @@ my_data_cleaner <-
 
 my_data_REG1A_NA <-
   my_data_cleaner %>% 
-  filter(is.na(REG1A))
+  filter(is.na(REG1A)) %>% 
+  mutate_at(c("REG1B", "LYVE1", "TFF1"), log)
 
 my_data_REG1A_zero <-
   my_data_cleaner %>% 
-  filter(REG1A == 0 & !is.na(REG1A))
+  filter(REG1A == 0 & !is.na(REG1A)) %>% 
+  mutate_at(c("REG1B", "LYVE1", "TFF1"), log)
 
 my_data_cleaner <-
   my_data_cleaner %>% 
   filter(!is.na(plasma_CA19_9) & !is.na(REG1A) & REG1A != 0 & plasma_CA19_9 != 0) %>%
   mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), log) %>%
   full_join(my_data_REG1A_zero) %>%
-  mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), scale, scale = FALSE) %>% 
+  mutate_at(c("REG1A"), scale, scale = FALSE, center = TRUE) %>% 
   full_join(my_data_REG1A_NA) %>%
+  mutate_at(c("REG1B", "LYVE1", "TFF1"), scale, scale = FALSE, center = TRUE) %>%
   mutate(REG1A = REG1A[,1],
          REG1B = REG1B[,1],
          LYVE1 = LYVE1[,1],
@@ -41,7 +44,17 @@ write_tsv(x = my_data_cleaner,
 
 ## PCA data
 
-my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,stage , plasma_CA19_9,creatinine , LYVE1, REG1B, TFF1) %>%
+my_data_clean_PCA <- select(my_data_clean, 
+                            patient_cohort,
+                            age, 
+                            sex, 
+                            diagnosis,
+                            stage, 
+                            plasma_CA19_9,
+                            creatinine,
+                            LYVE1,
+                            REG1B,
+                            TFF1) %>%
   mutate(patient_cohort = case_when(
     patient_cohort == "Cohort_1" ~ 0,
     patient_cohort == "Cohort_2" ~ 1),
@@ -53,13 +66,15 @@ my_data_clean_PCA <- select(my_data_clean , patient_cohort,age,sex, diagnosis ,s
       sex == "Male" ~ 0,
       sex == "Female" ~ 1),
     stage = case_when(
+      stage  == "I" ~ 1,
       stage  == "IA" ~ 1,
       stage  == "IB" ~ 1,
+      stage  == "II" ~ 2,
       stage  == "IIA" ~ 2,
       stage  == "IIB" ~ 2,
       stage  == "III" ~ 3,
       stage  == "IV" ~ 4),
-    stage = replace_na(stage,0)) %>%
+    stage = replace_na(stage, 0)) %>%
   drop_na(REG1B, LYVE1, TFF1, plasma_CA19_9)
 
 write_tsv(x = my_data_clean_PCA,
