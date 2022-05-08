@@ -80,7 +80,8 @@ slides > slide {
   }
 </style>
 <div style = "margin-top: -50px">
-```{r, echo = FALSE, fig.width = 9.5, fig.height = 5.5}
+```{r, echo = FALSE,warning = FALSE, message = FALSE, fig.width = 9.5, fig.height = 5.5}
+
 knitr::opts_chunk$set(warning = FALSE, message = FALSE)
 
 diagnosis_PCA <- (Data_onto_PCA_plot + cumulative_variance_plot)+ 
