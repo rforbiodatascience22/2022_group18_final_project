@@ -84,7 +84,7 @@ age_distribution <- clean_data %>%
 ```
 
 ```{r}
-  
+  age_distribution
 
 ```
 
