@@ -145,22 +145,22 @@ acc_4
 
 Blood vs Urinary diagnosis classification : \
  
-- <font size="4">1) K-means based on urinary bio-markers slightly better than the one based on plasma_CA19_9</font>
+<font size="4">1) K-means based on urinary bio-markers slightly better than the one based on plasma_CA19_9</font> \
 
-- <font size="4">2) Blood plasma shows importance in classification during the multinational logistic regression</font>
+<font size="4">2) Blood plasma shows importance in classification during the multinational logistic regression</font> \
 
-- <font size="4">3) The complete model including blood and urinary markers achieves the best sensitivity and specificity</font>
+<font size="4">3) The complete model including blood and urinary markers achieves the best sensitivity and specificity</font> \
 
 Possible explanation: \
 
-- <font size="4">1) Patients with malignant diagnosis should be subdivided into stages
-  to improve the classification performance.</font>
+<font size="4">1) Patients with malignant diagnosis should be subdivided into stages
+  to improve the classification performance.</font> \
   
-- <font size="4">2) Loss of 160 observations due to plasma_CA19_9 NA values</font>
+<font size="4">2) Loss of 160 observations due to plasma_CA19_9 NA values</font> \
   
 Further research aim: \
 
-- <font size="4">Discovery of new urinary bio-markers could provide a non invasive diagnosis with better diagnosis accuracy</font>
+<font size="4">Discovery of new urinary bio-markers could provide a non invasive diagnosis with better diagnosis accuracy</font> \
 
     
    
