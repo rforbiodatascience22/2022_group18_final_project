@@ -145,18 +145,18 @@ malignant_rotation_matrix_plot <- malignant_PCA_fit %>%
 
 malignant_PC_contribution_plot <- malignant_PCA_fit %>%
   tidy(matrix = "eigenvalues") %>%
-  ggplot(mapping = aes(x = PC, 
-                     y = percent)) +
-  geom_col(fill = "#56B4E9", 
+  ggplot(mapping = aes(x = PC,
+                       y = percent)) +
+  geom_col(fill = "#56B4E9",
            alpha = 0.8) +
   scale_x_continuous(breaks = 1:10) +
   scale_y_continuous(labels = scales::percent_format(),
                      expand = expansion(mult = c(0, 0.06))) +
-  labs(title = "The variance explained by each PC",
-       subtitle = "the first  PC explains nearly 30 % of the total data variance") +
   theme_minimal() +
   theme(legend.position = "none") +
-  theme_minimal_hgrid(12)
+  theme_minimal_hgrid(12) +
+  labs(title = "The variance explained by each PC",
+       subtitle = "the first  PC explains nearly 30 % of the total data variance")
 
 
 malignant_cumulative_variance_plot <- malignant_PCA_fit %>%
@@ -174,7 +174,7 @@ malignant_cumulative_variance_plot <- malignant_PCA_fit %>%
   theme(legend.position = "none",
         plot.title = element_text(size = 10)) +
   theme_minimal() +
-  background_grid() +
+  background_grid()
   
 
 
