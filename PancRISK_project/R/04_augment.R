@@ -10,19 +10,22 @@ my_data_cleaner <-
 
 my_data_REG1A_NA <-
   my_data_cleaner %>% 
-  filter(is.na(REG1A))
+  filter(is.na(REG1A)) %>% 
+  mutate_at(c("REG1B", "LYVE1", "TFF1"), log)
 
 my_data_REG1A_zero <-
   my_data_cleaner %>% 
-  filter(REG1A == 0 & !is.na(REG1A))
+  filter(REG1A == 0 & !is.na(REG1A)) %>% 
+  mutate_at(c("REG1B", "LYVE1", "TFF1"), log)
 
 my_data_cleaner <-
   my_data_cleaner %>% 
   filter(!is.na(plasma_CA19_9) & !is.na(REG1A) & REG1A != 0 & plasma_CA19_9 != 0) %>%
   mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), log) %>%
   full_join(my_data_REG1A_zero) %>%
-  mutate_at(c("REG1A", "REG1B", "LYVE1", "TFF1"), scale, scale = FALSE, center = TRUE) %>% 
+  mutate_at(c("REG1A"), scale, scale = FALSE, center = TRUE) %>% 
   full_join(my_data_REG1A_NA) %>%
+  mutate_at(c("REG1B", "LYVE1", "TFF1"), scale, scale = FALSE, center = TRUE) %>%
   mutate(REG1A = REG1A[,1],
          REG1B = REG1B[,1],
          LYVE1 = LYVE1[,1],
