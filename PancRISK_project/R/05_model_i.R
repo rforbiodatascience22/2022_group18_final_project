@@ -79,9 +79,12 @@ my_data_val_just_plasma_1 <-
   select(diagnosis, cutoff_plasma, age) %>%
   filter(diagnosis == "control" | diagnosis == "malignant") %>%
   drop_na() %>%
-  mutate(pred = as.numeric(predict(pancrisk_just_plasma_model_1, .))) %>%
+  mutate(diagnosis = case_when(diagnosis == "control" ~ 1,
+                               diagnosis == "malignant" ~ 3)) %>%
+  mutate(cutoff_plasma = case_when(cutoff_plasma == 1 ~ 3,
+                                   cutoff_plasma == 0 ~ 1)) %>%
   mutate(diagnosis = as.numeric(diagnosis)) %>%
-  select(diagnosis, pred)
+  select(diagnosis, cutoff_plasma)
 
 my_data_val_just_plasma_2 <-
   my_data_plasma %>%
@@ -89,9 +92,10 @@ my_data_val_just_plasma_2 <-
   select(diagnosis, cutoff_plasma, age) %>%
   filter(diagnosis == "benign" | diagnosis == "malignant") %>%
   drop_na() %>%
-  mutate(pred = as.numeric(predict(pancrisk_just_plasma_model_2, .))) %>%
   mutate(diagnosis = as.numeric(diagnosis)) %>%
-  select(diagnosis, pred)
+  mutate(cutoff_plasma = case_when(cutoff_plasma == 1 ~ 3,
+                                   cutoff_plasma == 0 ~ 2)) %>%
+  select(diagnosis, cutoff_plasma)  
 
 my_data_val_simple_1 <-
   my_data_test %>%
@@ -163,11 +167,11 @@ my_data_val_log_2 <-
   select(diagnosis, pred)
 
 roc1 <- my_data_val_just_plasma_1 %>%
-        pROC::roc(diagnosis, pred,
+        pROC::roc(diagnosis, cutoff_plasma,
             plot = FALSE, conf.level = 0.95)
 
 roc2 <- my_data_val_just_plasma_2 %>%
-        pROC::roc(diagnosis, pred,
+        pROC::roc(diagnosis, cutoff_plasma,
             plot = FALSE, conf.level = 0.95) 
 
 roc3 <- my_data_val_simple_1 %>%
@@ -202,14 +206,6 @@ roc10 <- my_data_val_log_2 %>%
          pROC::roc(diagnosis, pred,
             plot = FALSE, conf.level = 0.95) 
 
-my_data_val_just_plasma_1 <- find_cutoff(data = my_data_val_just_plasma_1, 
-                                         const_1 = 1, 
-                                         const_2 = 3)
-
-my_data_val_just_plasma_2 <- find_cutoff(data = my_data_val_just_plasma_2, 
-                                         const_1 = 2, 
-                                         const_2 = 3)
-
 my_data_val_simple_1 <- find_cutoff(data = my_data_val_simple_1, 
                                     const_1 = 2, 
                                     const_2 = 3)
@@ -235,9 +231,9 @@ my_data_val_log_2 <- find_cutoff(data = my_data_val_log_2,
                                  const_2 = 3)
 
 acc_1 <- 
-  print_acc(data_1 = table(my_data_val_just_plasma_1$pred, my_data_val_just_plasma_1$diagnosis) %>%
+  print_acc(data_1 = table(my_data_val_just_plasma_1$cutoff_plasma, my_data_val_just_plasma_1$diagnosis) %>%
               confusionMatrix(),
-            data_2 = table(my_data_val_just_plasma_2$pred, my_data_val_just_plasma_2$diagnosis) %>%
+            data_2 = table(my_data_val_just_plasma_2$cutoff_plasma, my_data_val_just_plasma_2$diagnosis) %>%
               confusionMatrix(),
             title = "Binary CA19_9")
 
