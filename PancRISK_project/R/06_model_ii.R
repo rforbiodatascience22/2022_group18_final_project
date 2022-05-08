@@ -36,12 +36,12 @@ malignant_pcs <- malignant_PCA_fit %>%
 Data_onto_PCA_plot <- pca_fit %>%
   augment(my_data_clean_PCA) %>%
   mutate(diagnosis = case_when(
-    diagnosis ==  0 ~ "control",
+    diagnosis == 0 ~ "control",
     diagnosis == 1 ~ "benign",
     diagnosis == 2 ~ "malignant")) %>%
-  ggplot(aes(.fittedPC1, 
-             .fittedPC2, 
-             color = diagnosis)) + 
+  ggplot(mapping = aes( x = .fittedPC1, 
+                        y = .fittedPC2, 
+                        color = diagnosis)) + 
   geom_point(size = 1.5) +
   theme_minimal() + 
   background_grid() +
@@ -49,7 +49,7 @@ Data_onto_PCA_plot <- pca_fit %>%
         plot.title = element_text(size = 10)) +
   labs(x = "PC1", 
        y = "PC2",
-       title = "Loading plot of PC1 and PC2") +
+       title = "Biplot : data onto PC1 and PC2") +
   ylim(-5, 5) +
   xlim(-6, 6)
 
@@ -59,8 +59,8 @@ rotation_matrix_plot <- pca_fit %>%
   pivot_wider(names_from = "PC", 
               names_prefix = "PC", 
               values_from = "value") %>%
-  ggplot(aes(PC1, 
-             PC2)) +
+  ggplot(mapping = aes( x = PC1, 
+                        y = PC2)) +
   geom_segment(xend = 0, 
                yend = 0, 
                arrow = arrow_style) +
@@ -75,8 +75,8 @@ rotation_matrix_plot <- pca_fit %>%
 
 PC_contribution_plot <- pca_fit %>%
   tidy(matrix = "eigenvalues") %>%
-  ggplot(aes(PC, 
-             percent)) +
+  ggplot(mapping = aes(x = PC, 
+                       y = percent)) +
   geom_col(fill = "#56B4E9", 
            alpha = 0.8) +
   scale_x_continuous(breaks = 1:10) +
@@ -91,8 +91,8 @@ PC_contribution_plot <- pca_fit %>%
 
 cumulative_variance_plot <- pca_fit %>%
   tidy(matrix = "eigenvalues") %>%
-  ggplot(aes(PC, 
-             cumulative)) +
+  ggplot(mapping = aes(x = PC, 
+                       y = cumulative)) +
   geom_col(fill = "#0072B2", 
            alpha = 0.8) +
   scale_x_continuous(breaks = 1:10) +
@@ -105,15 +105,15 @@ cumulative_variance_plot <- pca_fit %>%
   background_grid() +
   theme(legend.position = "none",
         plot.title = element_text(size = 10)) +
-  labs(title = "Cumulative variance of PCs")
+  labs(title = "Scree plot : Cumulative variance ")
 
 
 malignant_onto_PCA_plot <- malignant_PCA_fit %>%
   augment(malignant_PCA) %>% 
   mutate(stage = as.factor(stage)) %>%
-  ggplot(aes(.fittedPC1,
-             .fittedPC2, 
-             color = stage)) + 
+  ggplot(mapping = aes(x = .fittedPC1,
+                       y = .fittedPC2, 
+                     color = stage)) + 
   geom_point(size = 1.5) +
   theme_minimal() + 
   background_grid() +
@@ -146,7 +146,8 @@ malignant_rotation_matrix_plot <- malignant_PCA_fit %>%
 
 malignant_PC_contribution_plot <- malignant_PCA_fit %>%
   tidy(matrix = "eigenvalues") %>%
-  ggplot(aes(PC, percent)) +
+  ggplot(mapping = aes(x = PC, 
+                     y = percent)) +
   geom_col(fill = "#56B4E9", 
            alpha = 0.8) +
   scale_x_continuous(breaks = 1:10) +
@@ -162,7 +163,8 @@ malignant_PC_contribution_plot <- malignant_PCA_fit %>%
 
 malignant_cumulative_variance_plot <- malignant_PCA_fit %>%
   tidy(matrix = "eigenvalues") %>%
-  ggplot(aes(PC, cumulative)) +
+  ggplot(mapping = aes(x = PC, 
+                       y = cumulative)) +
   geom_col(fill = "#0072B2", 
            alpha = 0.8) +
   geom_hline(yintercept = 0.598, 

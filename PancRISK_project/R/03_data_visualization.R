@@ -1,7 +1,3 @@
-library("tidyverse")
-library("patchwork")
-library("ggridges")
-
 # Loading of data 
 clean_data <- read.csv("PancRISK_project/data/02_my_data_clean.tsv", sep = "\t")
 
@@ -115,24 +111,10 @@ data_long <- clean_data %>%
                names_to = "protein", 
                values_to = "expression")
 
-# data_long %>%
-#   group_by(patient_cohort) %>%
-#   ggplot(mapping = aes(y = patient_cohort, 
-#                        fill = patient_cohort)) +
-#   facet_wrap(~protein, 
-#              ncol = 2, 
-#              scales = "free") +
-#   geom_bar() +
-#   xlab("Occurence of measured protein levels per Cohort ") +
-#   ylab("Cohort of patients") +
-#   labs(title = "Sample distribution between two cohorts of patients") +
-#   theme_minimal() +
-#   theme(legend.position="none")
-
 #  Levels of the 3 biomarkers in control, benign, and  (PDAC) samples
 
-LYVEvscreatinine <- clean_data%>%
-  select( diagnosis , stage , LYVE1, creatinine) %>%
+LYVEvscreatinine <- clean_data %>%
+  select(diagnosis, stage, LYVE1, creatinine) %>%
   drop_na(diagnosis)  %>%
   mutate(diagnosis = case_when(
     diagnosis == "control" ~ "control",

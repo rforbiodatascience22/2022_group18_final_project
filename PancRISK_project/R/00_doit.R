@@ -2,7 +2,6 @@
 library("tidyverse")
 library("stringr")
 library("patchwork")
-library("ggridges")
 library("scales")
 library("nnet")
 library("pROC")
@@ -23,7 +22,6 @@ source(file = "PancRISK_project/R/04_augment.R")
 source(file = "PancRISK_project/R/05_model_i.R")
 source(file = "PancRISK_project/R/06_model_ii.R")
 source(file = "PancRISK_project/R/07_model_iii.R")
-source(file = "PancRISK_project/R/08_analysis_i.R")
 rmarkdown::render(input = "PancRISK_project/Documents/trial_presentation_slide.Rmd", 
      output_file = "PancRISK_project/Documents/trial_presentation_slide.html",
      output_dir = "PancRISK_project/Documents/")
