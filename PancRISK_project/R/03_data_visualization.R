@@ -93,7 +93,7 @@ stage_precentage <-
   guides(fill = guide_legend(ncol = 2))
 
 all_distribution <- (diagnosis_percentage / plot_spacer() / stage_precentage / plot_spacer() / age_distribution / sex_distribution) + 
-  plot_layout(heights = unit(c(0.15, 0.15, 0.02, 0.03, 0.005, 0.03), c('npc', 'npc', 'npc', 'npc')))
+  plot_layout(heights = unit(c(0.03, 0.005, 0.03, 0.02, 0.15, 0.15), c('npc', 'npc', 'npc', 'npc')))
 
 #==================================================================================
 
