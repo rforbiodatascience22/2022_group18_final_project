@@ -21,8 +21,8 @@ color: #515151;
   
 - Control study: PancRISK
   - Blood biomarker; plasma_CA19_9
-  - Normalization; creatinine
   - Urinary biomarkers; REG1A, REG1B, LYVE1, TFF1
+  - Normalization; creatinine and age
   - Diagnosis; control, benign, malignant
 
 - Aim
