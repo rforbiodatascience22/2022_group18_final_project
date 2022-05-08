@@ -17,37 +17,37 @@ Kmeans_blood_diagnosis_ <- data_aug_pca %>%
          plasma_CA19_9) %>%
   kmeans(centers = 3) %>%
   augment(data_aug_pca) %>% 
-  rename(clusters= .cluster) %>% 
+  rename(clusters = .cluster) %>% 
   mutate(diagnosis = case_when( diagnosis == 0 ~ "control",
                                 diagnosis == 1 ~ "benign",
                                 diagnosis == 2 ~ "malignant"))
 
 
-Kmeans_blood_diagnosis_control <-Kmeans_blood_diagnosis_ %>% 
-  filter(diagnosis=="control")%>%
-  filter(.fittedPC1> -6) 
+Kmeans_blood_diagnosis_control <- Kmeans_blood_diagnosis_ %>% 
+  filter(diagnosis == "control") %>%
+  filter(.fittedPC1 > -6) 
 
 
-Kmeans_blood_diagnosis_benign <-Kmeans_blood_diagnosis_ %>% 
-  filter(diagnosis=="benign")%>%
-  filter(.fittedPC1> -6) 
+Kmeans_blood_diagnosis_benign <- Kmeans_blood_diagnosis_ %>% 
+  filter(diagnosis == "benign") %>%
+  filter(.fittedPC1 > -6) 
 
-Kmeans_blood_diagnosis_malignant <-Kmeans_blood_diagnosis_ %>% 
-  filter(diagnosis=="malignant")%>%
-  filter(.fittedPC1> -6) 
+Kmeans_blood_diagnosis_malignant <- Kmeans_blood_diagnosis_ %>% 
+  filter(diagnosis == "malignant") %>%
+  filter(.fittedPC1 > -6) 
 
 
 
-blood_control_statistics <-Kmeans_blood_diagnosis_control%>%
-  group_by(clusters)%>%
+blood_control_statistics <- Kmeans_blood_diagnosis_control %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
-blood_benign_statistics <-Kmeans_blood_diagnosis_benign%>%
-  group_by(clusters)%>%
+blood_benign_statistics <- Kmeans_blood_diagnosis_benign %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
-blood_malignant_statistics <-Kmeans_blood_diagnosis_malignant%>%
-  group_by(clusters)%>%
+blood_malignant_statistics <-Kmeans_blood_diagnosis_malignant %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
 
@@ -77,16 +77,16 @@ Kmeans_urinary_diagnosis_benign <- Kmeans_urinary_diagnosis_ %>%
 Kmeans_urinary_diagnosis_malignant <- Kmeans_urinary_diagnosis_ %>% 
   filter(diagnosis=="malignant")
 
-control_statistics <-Kmeans_urinary_diagnosis_control%>%
-  group_by(clusters)%>%
+control_statistics <-Kmeans_urinary_diagnosis_control %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
-benign_statistics <-Kmeans_urinary_diagnosis_benign%>%
-  group_by(clusters)%>%
+benign_statistics <-Kmeans_urinary_diagnosis_benign %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
-malignant_statistics <-Kmeans_urinary_diagnosis_malignant%>%
-  group_by(clusters)%>%
+malignant_statistics <-Kmeans_urinary_diagnosis_malignant %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
 
@@ -110,21 +110,21 @@ Kmeans_complete_diagnosis_control <- Kmeans_complete_diagnosis_ %>%
   filter(diagnosis=="control")
 
 Kmeans_complete_diagnosis_benign <- Kmeans_complete_diagnosis_ %>% 
-  filter(diagnosis=="benign")
+  filter(diagnosis == "benign")
 
 Kmeans_complete_diagnosis_malignant <- Kmeans_complete_diagnosis_ %>% 
-  filter(diagnosis=="malignant")
+  filter(diagnosis == "malignant")
 
-complete_control_statistics <-Kmeans_complete_diagnosis_control%>%
-  group_by(clusters)%>%
+complete_control_statistics <-Kmeans_complete_diagnosis_control %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
-complete_benign_statistics <-Kmeans_complete_diagnosis_benign%>%
-  group_by(clusters)%>%
+complete_benign_statistics <-Kmeans_complete_diagnosis_benign %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
-complete_malignant_statistics <-Kmeans_complete_diagnosis_malignant%>%
-  group_by(clusters)%>%
+complete_malignant_statistics <-Kmeans_complete_diagnosis_malignant %>%
+  group_by(clusters) %>%
   summarise(count = n())
 
 
@@ -148,24 +148,24 @@ blood_diagnosis_plot <- ggplot() +
                   color = clusters, 
                   shape = diagnosis ),
               size = 2 ) +
-  geom_point( data= Kmeans_blood_diagnosis_malignant , 
+  geom_point( data = Kmeans_blood_diagnosis_malignant, 
               aes(x = .fittedPC1, 
-                  y = .fittedPC2 , 
-                  color = clusters , 
-                  shape = diagnosis ), 
-              size = 2 ) +
-  scale_shape_manual(values=c(1 ,2 ,3))+
-  xlim(-6, 3.5)+
-  ylim(-5, 5)+
-  labs( title = "plasma_CA19_9") +
+                  y = .fittedPC2, 
+                  color = clusters, 
+                  shape = diagnosis), 
+              size = 2) +
+  scale_shape_manual(values=c(1, 2, 3)) +
+  xlim(-6, 3.5) +
+  ylim(-5, 5) +
+  labs(title = "plasma_CA19_9") +
   theme_minimal(base_size = 10,
-                base_family = "Avenir")+
-  theme(plot.title = element_text(size=8))+
+                base_family = "Avenir") +
+  theme(plot.title = element_text(size=8)) +
   theme_minimal(8)
 
 
-blood_diagnosis_plot_<-blood_diagnosis_plot+
-  guides(size='none')+
+blood_diagnosis_plot_<-blood_diagnosis_plot +
+  guides(size='none') +
   theme(legend.position = "bottom ",
         legend.box="vertical", 
         legend.margin=margin())
@@ -176,15 +176,15 @@ blood_diagnosis_plot_<-blood_diagnosis_plot+
 
 
 urinary_diagnosis_plot <- ggplot() +
-  geom_point( data= Kmeans_urinary_diagnosis_control , 
+  geom_point(data = Kmeans_urinary_diagnosis_control, 
               aes(x = .fittedPC1, 
-                  y = .fittedPC2 , 
+                  y = .fittedPC2, 
                   color = clusters, 
-                  shape = diagnosis ), 
+                  shape = diagnosis), 
               size = 2) +
-  geom_point( data= Kmeans_urinary_diagnosis_benign , 
+  geom_point( data= Kmeans_urinary_diagnosis_benign, 
               aes(x = .fittedPC1, 
-                  y = .fittedPC2 , 
+                  y = .fittedPC2, 
                   color = clusters,
                   shape = diagnosis ), 
               size = 2 ) +

@@ -36,7 +36,7 @@ malignant_pcs <- malignant_PCA_fit %>%
 Data_onto_PCA_plot <- pca_fit %>%
   augment(my_data_clean_PCA) %>%
   mutate(diagnosis = case_when(
-    diagnosis ==  0 ~ "control",
+    diagnosis == 0 ~ "control",
     diagnosis == 1 ~ "benign",
     diagnosis == 2 ~ "malignant")) %>%
   ggplot(aes(.fittedPC1, 

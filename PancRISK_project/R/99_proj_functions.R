@@ -1,10 +1,3 @@
-# Validate ---------------------------------------------------------------------
-validate <- function(data, 
-                     model, 
-                     diagnosis_1, 
-                     diagnosis_2) {
-  
-}
 # Cutoff -----------------------------------------------------------------------
 find_cutoff <- function(data, 
                         const_1, 
@@ -17,6 +10,7 @@ find_cutoff <- function(data,
                          const_1, 
                          const_2))
 }
+
 # Fit --------------------------------------------------------------------------
 fit <- function(data, 
                 form, 
@@ -29,6 +23,7 @@ fit <- function(data,
         na.action = na.omit,
         family = binomial(link = "logit"))
 }
+
 # Accuracy ---------------------------------------------------------------------
 print_acc <- function(data_1, 
                       data_2, 
@@ -91,7 +86,6 @@ print_acc <- function(data_1,
     knitr::kable(align = c(rep('c', 
                                times = 3)), 
                  col.names = NULL,) %>%
-    #add_header_above(c("Benign vs. Malignant" = 1, " " = 1)) %>% 
     add_header_above(c("\ \n\n \ " = 1, 
                        setNames(object = 1, 
                                 nm = "Control vs. Malignant"), 
